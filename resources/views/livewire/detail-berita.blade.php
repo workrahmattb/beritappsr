@@ -81,41 +81,7 @@
         .nav-links a:hover::after { transform: scaleX(1); }
         .nav-links a.active { color: #16a34a; }
         .nav-links a.active::after { transform: scaleX(1); }
-        .nav-auth {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .btn-login {
-            display: inline-block;
-            padding: 8px 20px;
-            border-radius: 8px;
-            font-size: 0.88rem;
-            font-weight: 600;
-            text-decoration: none;
-            background: #16a34a;
-            color: white;
-            transition: all .2s;
-        }
-        .btn-login:hover {
-            background: #15803d;
-            box-shadow: 0 4px 12px rgba(22,163,74,0.3);
-        }
-        .btn-login-outline {
-            display: inline-block;
-            padding: 8px 20px;
-            border-radius: 8px;
-            font-size: 0.88rem;
-            font-weight: 600;
-            text-decoration: none;
-            border: 1.5px solid #16a34a;
-            color: #16a34a;
-            transition: all .2s;
-        }
-        .btn-login-outline:hover {
-            background: #16a34a;
-            color: white;
-        }
+
         .menu-toggle {
             display: none;
             flex-direction: column;
@@ -167,7 +133,6 @@
 
         @media (max-width: 768px) {
             .nav-links { display: none; }
-            .nav-auth { display: none; }
             .menu-toggle { display: flex; }
         }
 
@@ -607,18 +572,7 @@
                 <a href="#">Kontak</a>
             </div>
 
-            <div class="nav-auth">
-                @if (Route::has('login'))
-                    @auth
-                        <a href="{{ route('dashboard') }}" class="btn-login">Dashboard</a>
-                    @else
-                        <a href="{{ route('login') }}" class="btn-login-outline">Masuk</a>
-                        @if (Route::has('register'))
-                            <a href="{{ route('register') }}" class="btn-login">Daftar</a>
-                        @endif
-                    @endauth
-                @endif
-            </div>
+
 
             <button class="menu-toggle" id="menuToggle" aria-label="Menu">
                 <span></span>
@@ -632,16 +586,7 @@
             <a href="/berita" class="{{ request()->is('berita*') ? 'active' : '' }}">Berita</a>
             <a href="#">Tentang</a>
             <a href="#">Kontak</a>
-            @if (Route::has('login'))
-                @auth
-                    <a href="{{ route('dashboard') }}" class="btn-login" style="text-align:center;margin-top:8px;">Dashboard</a>
-                @else
-                    <a href="{{ route('login') }}" class="btn-login-outline" style="text-align:center;margin-top:8px;">Masuk</a>
-                    @if (Route::has('register'))
-                        <a href="{{ route('register') }}" class="btn-login" style="text-align:center;">Daftar</a>
-                    @endif
-                @endauth
-            @endif
+
         </div>
     </nav>
 
