@@ -1,0 +1,57 @@
+# Laravel & PHP
+/vendor
+/.phpunit.cache
+/.phpunit.result.cache
+/phpunit.xml
+/phpunit.xml.bkp
+/auth.json
+/phpactor.json
+/Homestead.json
+/Homestead.yaml
+
+# Environment
+.env
+.env.backup
+.env.production
+.env.*
+!.env.example
+
+# Node / Frontend
+/node_modules
+/npm-debug.log
+/yarn-error.log
+# /public/build
+/public/hot
+
+# Laravel Storage & Cache
+/public/storage
+/storage/*.key
+/storage/pail
+/storage/logs/*
+/storage/framework/cache/*
+/storage/framework/sessions/*
+/storage/framework/views/*
+/bootstrap/cache/*
+!bootstrap/cache/.gitignore
+
+# Database
+/database/migrations/*.sql
+/database/migrations/*.sqlite
+/database/*.sqlite
+/database/*.sqlite-journal
+/.sqlite
+
+# IDE
+/.fleet
+/.idea
+/.nova
+/.vscode
+/.zed
+/.claude
+
+# System
+.DS_Store
+Thumbs.db
+._*
+.Spotlight-V100
+.Trashes
