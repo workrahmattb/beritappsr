@@ -10,6 +10,9 @@
             -webkit-font-smoothing: antialiased;
         }
 
+        /* ── Alpine x-cloak ── */
+        [x-cloak] { display: none !important; }
+
         /* ── Navbar ── */
         .navbar {
             position: fixed;
@@ -18,12 +21,13 @@
             right: 0;
             z-index: 50;
             background: rgba(255,255,255,0.95);
-            backdrop-filter: blur(12px);
-            border-bottom: 1px solid rgba(22, 163, 74, 0.1);
-            transition: all .3s ease;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(22,163,74,0.1);
+            transition: box-shadow .3s;
         }
         .navbar.scrolled {
-            box-shadow: 0 4px 20px rgba(22, 163, 74, 0.08);
+            box-shadow: 0 4px 24px rgba(22,163,74,0.08);
         }
         .navbar-inner {
             max-width: 1200px;
@@ -40,20 +44,13 @@
             gap: 10px;
             text-decoration: none;
             font-weight: 800;
-            font-size: 1.35rem;
+            font-size: 1.25rem;
             color: #16a34a;
             letter-spacing: -0.5px;
         }
-        .nav-logo-icon {
-            width: 36px; height: 36px;
-            background: linear-gradient(135deg, #16a34a, #15803d);
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 18px;
-            font-weight: 800;
+        .logo-img {
+            height: 40px;
+            width: auto;
         }
         .nav-links {
             display: flex;
@@ -62,13 +59,12 @@
         }
         .nav-links a {
             text-decoration: none;
-            color: #4b5563;
-            font-size: 0.9rem;
+            font-size: 0.88rem;
             font-weight: 500;
+            color: #6b7280;
             transition: color .2s;
             position: relative;
         }
-        .nav-links a:hover { color: #16a34a; }
         .nav-links a::after {
             content: '';
             position: absolute;
@@ -77,83 +73,103 @@
             right: 0;
             height: 2px;
             background: #16a34a;
+            border-radius: 2px;
             transform: scaleX(0);
             transition: transform .2s;
         }
+        .nav-links a:hover { color: #16a34a; }
         .nav-links a:hover::after { transform: scaleX(1); }
-        .nav-links a.active {
-            color: #16a34a;
-        }
-        .nav-links a.active::after {
-            transform: scaleX(1);
-        }
+        .nav-links a.active { color: #16a34a; }
+        .nav-links a.active::after { transform: scaleX(1); }
         .nav-auth {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
         }
         .btn-login {
-            text-decoration: none;
+            display: inline-block;
             padding: 8px 20px;
             border-radius: 8px;
-            font-size: 0.875rem;
+            font-size: 0.88rem;
             font-weight: 600;
-            color: #16a34a;
-            border: 1.5px solid #16a34a;
+            text-decoration: none;
+            background: #16a34a;
+            color: white;
             transition: all .2s;
         }
         .btn-login:hover {
-            background: #16a34a;
-            color: white;
-        }
-        .btn-register {
-            text-decoration: none;
-            padding: 8px 20px;
-            border-radius: 8px;
-            font-size: 0.875rem;
-            font-weight: 600;
-            background: #16a34a;
-            color: white;
-            transition: all .2s;
-        }
-        .btn-register:hover {
             background: #15803d;
             box-shadow: 0 4px 12px rgba(22,163,74,0.3);
         }
-        .btn-dashboard {
-            text-decoration: none;
+        .btn-login-outline {
+            display: inline-block;
             padding: 8px 20px;
             border-radius: 8px;
-            font-size: 0.875rem;
+            font-size: 0.88rem;
             font-weight: 600;
-            background: #16a34a;
-            color: white;
+            text-decoration: none;
+            border: 1.5px solid #16a34a;
+            color: #16a34a;
             transition: all .2s;
         }
-        .btn-dashboard:hover {
-            background: #15803d;
+        .btn-login-outline:hover {
+            background: #16a34a;
+            color: white;
         }
-
-        /* ── Mobile Menu ── */
         .menu-toggle {
             display: none;
             flex-direction: column;
             gap: 5px;
             cursor: pointer;
             padding: 4px;
-            background: none;
+            background: transparent;
             border: none;
         }
         .menu-toggle span {
+            display: block;
             width: 24px;
             height: 2.5px;
-            background: #374151;
-            border-radius: 2px;
+            background: #4b5563;
+            border-radius: 4px;
             transition: all .3s;
         }
-        .menu-toggle.open span:nth-child(1) { transform: rotate(45deg) translate(5px,5px); }
-        .menu-toggle.open span:nth-child(2) { opacity: 0; }
-        .menu-toggle.open span:nth-child(3) { transform: rotate(-45deg) translate(5px,-5px); }
+        .menu-toggle.active span:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+        .menu-toggle.active span:nth-child(2) {
+            opacity: 0;
+        }
+        .menu-toggle.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(5px, -5px);
+        }
+        .mobile-menu {
+            display: none;
+            flex-direction: column;
+            gap: 4px;
+            padding: 0 24px 20px;
+            background: white;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .mobile-menu.open {
+            display: flex;
+        }
+        .mobile-menu a {
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #4b5563;
+            padding: 10px 0;
+            transition: color .2s;
+        }
+        .mobile-menu a:hover,
+        .mobile-menu a.active { color: #16a34a; }
+
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .nav-auth { display: none; }
+            .menu-toggle { display: flex; }
+        }
 
         /* ── Page Header ── */
         .page-header {
@@ -378,31 +394,7 @@
 
         /* ── Responsive ── */
         @media (max-width: 768px) {
-            .nav-links { display: none; }
-            .nav-links.open {
-                display: flex;
-                flex-direction: column;
-                position: absolute;
-                top: 72px;
-                left: 0;
-                right: 0;
-                background: white;
-                padding: 20px 24px;
-                gap: 16px;
-                border-bottom: 1px solid #e5e7eb;
-                box-shadow: 0 8px 24px rgba(0,0,0,0.08);
-            }
-            .menu-toggle { display: flex; }
             .berita-grid { grid-template-columns: 1fr; }
-        }
-
-        @media (max-width: 480px) {
-            .nav-auth .btn-login,
-            .nav-auth .btn-register,
-            .nav-auth .btn-dashboard {
-                padding: 6px 14px;
-                font-size: 0.8rem;
-            }
         }
 
         /* ── Animation ── */
@@ -422,35 +414,51 @@
     <nav class="navbar" id="navbar">
         <div class="navbar-inner">
             <a href="/" class="nav-logo">
-                <span class="nav-logo-icon">B</span>
-                <span>{{ config('app.name', 'Berita Apps') }}</span>
+                <img src="{{ asset('gambar/ppsr logo.webp') }}" alt="PPSR Logo" class="logo-img">
             </a>
 
-            <div class="nav-links" id="navLinks">
-                <a href="/">Beranda</a>
-                <a href="/berita" class="active">Berita</a>
+            <div class="nav-links">
+                <a href="/" class="{{ request()->is('/') ? 'active' : '' }}">Beranda</a>
+                <a href="/berita" class="{{ request()->is('berita*') ? 'active' : '' }}">Berita</a>
                 <a href="#">Tentang</a>
                 <a href="#">Kontak</a>
             </div>
 
-            <div style="display:flex;align-items:center;gap:12px;">
-                <button class="menu-toggle" id="menuToggle" aria-label="Menu">
-                    <span></span><span></span><span></span>
-                </button>
-
-                <div class="nav-auth">
-                    @if (Route::has('login'))
-                        @auth
-                            <a href="{{ route('dashboard') }}" class="btn-dashboard">Dashboard</a>
-                        @else
-                            <a href="{{ route('login') }}" class="btn-login">Masuk</a>
-                            @if (Route::has('register'))
-                                <a href="{{ route('register') }}" class="btn-register">Daftar</a>
-                            @endif
-                        @endauth
-                    @endif
-                </div>
+            <div class="nav-auth">
+                @if (Route::has('login'))
+                    @auth
+                        <a href="{{ route('dashboard') }}" class="btn-login">Dashboard</a>
+                    @else
+                        <a href="{{ route('login') }}" class="btn-login-outline">Masuk</a>
+                        @if (Route::has('register'))
+                            <a href="{{ route('register') }}" class="btn-login">Daftar</a>
+                        @endif
+                    @endauth
+                @endif
             </div>
+
+            <button class="menu-toggle" id="menuToggle" aria-label="Menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+
+        <div class="mobile-menu" id="mobileMenu">
+            <a href="/" class="{{ request()->is('/') ? 'active' : '' }}">Beranda</a>
+            <a href="/berita" class="{{ request()->is('berita*') ? 'active' : '' }}">Berita</a>
+            <a href="#">Tentang</a>
+            <a href="#">Kontak</a>
+            @if (Route::has('login'))
+                @auth
+                    <a href="{{ route('dashboard') }}" class="btn-login" style="text-align:center;margin-top:8px;">Dashboard</a>
+                @else
+                    <a href="{{ route('login') }}" class="btn-login-outline" style="text-align:center;margin-top:8px;">Masuk</a>
+                    @if (Route::has('register'))
+                        <a href="{{ route('register') }}" class="btn-login" style="text-align:center;">Daftar</a>
+                    @endif
+                @endauth
+            @endif
         </div>
     </nav>
 
@@ -541,23 +549,25 @@
     <script>
         // Navbar scroll effect
         const navbar = document.getElementById('navbar');
-        window.addEventListener('scroll', () => {
-            navbar.classList.toggle('scrolled', window.scrollY > 20);
-        });
+        if (navbar) {
+            window.addEventListener('scroll', function() {
+                if (window.scrollY > 20) {
+                    navbar.classList.add('scrolled');
+                } else {
+                    navbar.classList.remove('scrolled');
+                }
+            });
+        }
 
         // Mobile menu toggle
         const menuToggle = document.getElementById('menuToggle');
-        const navLinks = document.getElementById('navLinks');
-        menuToggle.addEventListener('click', () => {
-            menuToggle.classList.toggle('open');
-            navLinks.classList.toggle('open');
-        });
-        navLinks.querySelectorAll('a').forEach(link => {
-            link.addEventListener('click', () => {
-                menuToggle.classList.remove('open');
-                navLinks.classList.remove('open');
+        const mobileMenu = document.getElementById('mobileMenu');
+        if (menuToggle && mobileMenu) {
+            menuToggle.addEventListener('click', function() {
+                this.classList.toggle('active');
+                mobileMenu.classList.toggle('open');
             });
-        });
+        }
     </script>
     @endpush
 </div>
