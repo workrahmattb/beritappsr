@@ -207,22 +207,52 @@
         .btn-primary {
             display: inline-flex;
             align-items: center;
-            gap: 8px;
-            padding: 14px 32px;
-            background: #16a34a;
+            gap: 10px;
+            padding: 16px 36px;
+            background: linear-gradient(135deg, #16a34a, #22c55e);
             color: white;
             text-decoration: none;
-            border-radius: 12px;
-            font-weight: 600;
-            font-size: 1rem;
-            transition: all .25s;
+            border-radius: 14px;
+            font-weight: 700;
+            font-size: 1.05rem;
+            letter-spacing: 0.3px;
+            transition: all .3s cubic-bezier(0.4, 0, 0.2, 1);
             border: none;
             cursor: pointer;
+            position: relative;
+            box-shadow: 0 4px 20px rgba(22,163,74,0.3);
+        }
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(255,255,255,0.15), transparent 60%);
+            border-radius: 14px;
+            pointer-events: none;
         }
         .btn-primary:hover {
-            background: #15803d;
-            transform: translateY(-2px);
-            box-shadow: 0 8px 24px rgba(22,163,74,0.35);
+            background: linear-gradient(135deg, #15803d, #16a34a);
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 12px 36px rgba(22,163,74,0.45);
+        }
+        .btn-primary:active {
+            transform: translateY(-1px) scale(0.98);
+        }
+
+        /* ── Hero CTA Glow ── */
+        .btn-hero-cta::after {
+            content: '';
+            position: absolute;
+            inset: -4px;
+            border-radius: 18px;
+            background: linear-gradient(135deg, #16a34a, #22c55e, #4ade80);
+            z-index: -1;
+            opacity: 0;
+            filter: blur(12px);
+            transition: opacity .3s;
+        }
+        .btn-hero-cta:hover::after {
+            opacity: 0.6;
         }
         .btn-outline-light {
             display: inline-flex;
@@ -526,7 +556,7 @@
                 @endif
 
                 <h1 class="hero-title animate-fade-up animate-delay-1">
-                    {{ $hero->title ?? 'Selamat Datang di ' }}<span>{{ $hero->subtitle ?? config('app.name', 'Berita Apps') }}</span>
+                    {{ $hero->title ?? 'Pondok Pesantren' }}<span>{{ $hero->subtitle ?? 'Syafa\'aturrasul' }}</span>
                 </h1>
 
                 <p class="hero-subtitle animate-fade-up animate-delay-2">
@@ -534,8 +564,8 @@
                 </p>
 
                 <div class="hero-actions animate-fade-up animate-delay-3">
-                    <a href="#berita" class="btn-primary">
-                        Lihat Berita
+                    <a href="{{ $hero->button_url ?? '#berita' }}" class="btn-primary btn-hero-cta">
+                        {{ $hero->button_text ?? 'Lihat Berita' }}
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
                     </a>
                     <a href="#" class="btn-outline-light">

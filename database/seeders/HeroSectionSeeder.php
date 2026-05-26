@@ -10,8 +10,8 @@ class HeroSectionSeeder extends Seeder
     public function run(): void
     {
         HeroSection::create([
-            'title' => 'Selamat Datang di ',
-            'subtitle' => 'Berita Apps',
+            'title' => 'Pondok Pesantren',
+            'subtitle' => "Syafa'aturrasul",
             'description' => 'Temukan informasi terkini, artikel menarik, dan berita terpercaya dalam satu platform. Kami menyajikan berita dengan akurat dan cepat.',
             'badge_text' => 'Portal Berita Terpercaya',
             'button_text' => 'Lihat Berita',

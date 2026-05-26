@@ -26,14 +26,14 @@ class HeroSectionForm
                     ->schema([
                         TextInput::make('title')
                             ->label('Judul')
-                            ->placeholder('Contoh: Selamat Datang di Berita Apps')
+                            ->placeholder('Contoh: Pondok Pesantren Syafa\'aturrasul')
                             ->required()
                             ->maxLength(255)
                             ->columnSpanFull(),
 
                         TextInput::make('subtitle')
                             ->label('Subtitle')
-                            ->placeholder('Contoh: Portal Berita Terpercaya')
+                            ->placeholder('Contoh: Syafa\'aturrasul')
                             ->maxLength(255)
                             ->columnSpanFull(),
 
