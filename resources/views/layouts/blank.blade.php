@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{ config('app.name', 'Berita Apps') }}</title>
+    <title>{{ filled($title ?? null) ? $title.' - '.config('app.name', 'Berita Apps') : config('app.name', 'Berita Apps') }}</title>
     <link rel="icon" href="/favicon.ico" sizes="any">
 
     <!-- Fonts -->

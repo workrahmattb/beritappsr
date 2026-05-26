@@ -32,6 +32,6 @@ class DetailBerita extends Component
     public function render()
     {
         return view('livewire.detail-berita')
-            ->layout('layouts.blank');
+            ->layout('layouts.blank', ['title' => $this->article->title]);
     }
 }

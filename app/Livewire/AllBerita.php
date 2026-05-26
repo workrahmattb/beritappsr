@@ -35,6 +35,6 @@ class AllBerita extends Component
     public function render()
     {
         return view('livewire.all-berita')
-            ->layout('layouts.blank');
+            ->layout('layouts.blank', ['title' => 'Berita']);
     }
 }
