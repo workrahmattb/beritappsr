@@ -4,6 +4,7 @@ namespace App\Livewire;
 
 use App\Models\Article;
 use App\Models\HeroSection;
+use App\Services\InstagramService;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
 
@@ -26,6 +27,24 @@ class HomePage extends Component
             ->orderBy('published_at', 'desc')
             ->take(3)
             ->get();
+    }
+
+    #[Computed]
+    public function instagramPosts()
+    {
+        return app(InstagramService::class)->getFeed();
+    }
+
+    #[Computed]
+    public function instagramActive()
+    {
+        return app(InstagramService::class)->isActive();
+    }
+
+    #[Computed]
+    public function instagramUsername()
+    {
+        return app(InstagramService::class)->getUsername();
     }
 
     public function render()
