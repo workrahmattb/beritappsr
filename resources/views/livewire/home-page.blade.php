@@ -174,6 +174,56 @@
                 .menu-toggle {
                     display: flex;
                 }
+
+                .carousel-arrow {
+                    width: 36px;
+                    height: 36px;
+                }
+
+                .carousel-arrow-left {
+                    left: 12px;
+                }
+
+                .carousel-arrow-right {
+                    right: 12px;
+                }
+
+                .carousel-dots {
+                    bottom: 24px;
+                }
+
+                .hero-title {
+                    font-size: clamp(1.35rem, 5vw, 1.75rem);
+                }
+
+                .hero-subtitle {
+                    font-size: clamp(0.78rem, 2.5vw, 0.92rem);
+                }
+            }
+
+            @media (max-width: 480px) {
+                .hero-title {
+                    font-size: clamp(1.2rem, 6vw, 1.35rem);
+                }
+
+                .hero-subtitle {
+                    font-size: clamp(0.72rem, 3vw, 0.78rem);
+                }
+
+                .hero-badge {
+                    font-size: 0.72rem;
+                    padding: 4px 12px;
+                }
+
+                .btn-primary {
+                    padding: 12px 24px;
+                    font-size: 0.9rem;
+                }
+
+                .btn-outline-light {
+                    padding: 10px 20px;
+                    font-size: 0.85rem;
+                }
             }
 
             /* ── Hero ── */
@@ -316,23 +366,15 @@
                 z-index: 10;
                 width: 48px;
                 height: 48px;
-                border-radius: 50%;
-                border: 1.5px solid rgba(255, 255, 255, 0.25);
-                background: rgba(0, 0, 0, 0.3);
-                backdrop-filter: blur(8px);
-                color: white;
+                border: none;
+                background: transparent;
                 cursor: pointer;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                transition: all .3s ease;
                 padding: 0;
+                opacity: 0;
             }
 
-            .carousel-arrow:hover {
-                background: rgba(22, 163, 74, 0.5);
-                border-color: #4ade80;
-                box-shadow: 0 0 20px rgba(74, 222, 128, 0.3);
+            .carousel-arrow svg {
+                display: none;
             }
 
             .carousel-arrow-left {
@@ -348,12 +390,15 @@
                     width: 36px;
                     height: 36px;
                 }
+
                 .carousel-arrow-left {
                     left: 12px;
                 }
+
                 .carousel-arrow-right {
                     right: 12px;
                 }
+
                 .carousel-dots {
                     bottom: 24px;
                 }
@@ -738,7 +783,7 @@
             .instagram-overlay {
                 position: absolute;
                 inset: 0;
-                background: linear-gradient(to top, rgba(0,0,0,0.5), transparent 40%);
+                background: linear-gradient(to top, rgba(0, 0, 0, 0.5), transparent 40%);
                 display: flex;
                 align-items: flex-end;
                 justify-content: center;
@@ -752,7 +797,7 @@
             }
 
             .instagram-overlay-icon {
-                color: rgba(255,255,255,0.9);
+                color: rgba(255, 255, 255, 0.9);
                 width: 22px;
                 height: 22px;
             }
@@ -764,7 +809,7 @@
                 z-index: 2;
                 width: 36px;
                 height: 36px;
-                background: rgba(0,0,0,0.6);
+                background: rgba(0, 0, 0, 0.6);
                 border-radius: 50%;
                 display: flex;
                 align-items: center;
@@ -884,7 +929,8 @@
             <div class="hero-slide {{ $index === 0 ? 'active' : '' }}" data-slide="{{ $index }}">
                 @if ($hero->image)
                     <div class="hero-bg" style="background-image: url('{{ asset('storage/' . $hero->image) }}');"></div>
-                    <div class="hero-overlay" style="background: linear-gradient(135deg, rgba(0,0,0,{{ $hero->overlay_opacity / 100 }}), rgba(0,0,0,{{ ($hero->overlay_opacity - 10) / 100 }}));">
+                    <div class="hero-overlay"
+                        style="background: linear-gradient(135deg, rgba(0,0,0,{{ $hero->overlay_opacity / 100 }}), rgba(0,0,0,{{ ($hero->overlay_opacity - 10) / 100 }}));">
                     </div>
                 @else
                     <div class="hero-bg" style="background: linear-gradient(135deg, #064e3b, #065f46, #047857);"></div>
@@ -895,15 +941,21 @@
                     <div class="hero-text">
                         @if ($hero->badge_text)
                             <div class="hero-badge">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <polygon
+                                        points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
                                 </svg>
                                 {{ $hero->badge_text }}
                             </div>
                         @else
                             <div class="hero-badge">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <polygon
+                                        points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
                                 </svg>
                                 Portal Berita Terpercaya
                             </div>
@@ -920,14 +972,18 @@
                         <div class="hero-actions">
                             <a href="{{ $hero->button_url ?? '#berita' }}" class="btn-primary btn-hero-cta">
                                 {{ $hero->button_text ?? 'Lihat Berita' }}
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                                    stroke-linejoin="round">
                                     <line x1="5" y1="12" x2="19" y2="12" />
                                     <polyline points="12 5 19 12 12 19" />
                                 </svg>
                             </a>
                             <a href="#" class="btn-outline-light">
                                 Tentang Kami
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                                    stroke-linejoin="round">
                                     <circle cx="12" cy="12" r="10" />
                                     <polyline points="12 16 16 12 12 8" />
                                     <line x1="8" y1="12" x2="16" y2="12" />
@@ -942,17 +998,20 @@
         @if ($heroCount > 1)
             <div class="carousel-dots" id="carouselDots">
                 @foreach ($heroes as $index => $hero)
-                    <button class="carousel-dot {{ $index === 0 ? 'active' : '' }}" data-dot="{{ $index }}" aria-label="Slide {{ $index + 1 }}"></button>
+                    <button class="carousel-dot {{ $index === 0 ? 'active' : '' }}" data-dot="{{ $index }}"
+                        aria-label="Slide {{ $index + 1 }}"></button>
                 @endforeach
             </div>
 
             <button class="carousel-arrow carousel-arrow-left" id="carouselPrev" aria-label="Previous slide">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                     <polyline points="15 18 9 12 15 6" />
                 </svg>
             </button>
             <button class="carousel-arrow carousel-arrow-right" id="carouselNext" aria-label="Next slide">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                     <polyline points="9 18 15 12 9 6" />
                 </svg>
             </button>
@@ -1048,54 +1107,64 @@
     </section>
 
     @if ($this->instagramActive)
-    <!-- ════════════════════════════════════════════ -->
-    <!-- INSTAGRAM SECTION -->
-    <!-- ════════════════════════════════════════════ -->
-    <section class="section" style="padding-bottom: 40px;">
-        <div class="section-header">
-            <div class="section-label">Instagram</div>
-            <h2 class="section-title">Ikuti Kami di Instagram</h2>
-            <p class="section-desc">Lihat kegiatan dan momen terbaru dari Pondok Pesantren Syafa'aturrasul</p>
-        </div>
+        <!-- ════════════════════════════════════════════ -->
+        <!-- INSTAGRAM SECTION -->
+        <!-- ════════════════════════════════════════════ -->
+        <section class="section" style="padding-bottom: 40px;">
+            <div class="section-header">
+                <div class="section-label">Instagram</div>
+                <h2 class="section-title">Ikuti Kami di Instagram</h2>
+                <p class="section-desc">Lihat kegiatan dan momen terbaru dari Pondok Pesantren Syafa'aturrasul</p>
+            </div>
 
-        @if (!empty($this->instagramPosts))
-            <div class="instagram-grid">
-                @foreach ($this->instagramPosts as $post)
-                    <a href="{{ $post['permalink'] }}" target="_blank" rel="noopener noreferrer" class="instagram-card">
-                        <div class="instagram-img-wrap">
-                            @if ($post['is_video'])
-                                <div class="instagram-video-badge">
-                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                                        <polygon points="5 3 19 12 5 21 5 3" />
+            @if (!empty($this->instagramPosts))
+                <div class="instagram-grid">
+                    @foreach ($this->instagramPosts as $post)
+                        <a href="{{ $post['permalink'] }}" target="_blank" rel="noopener noreferrer"
+                            class="instagram-card">
+                            <div class="instagram-img-wrap">
+                                @if ($post['is_video'])
+                                    <div class="instagram-video-badge">
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                            stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                                            stroke-linejoin="round">
+                                            <polygon points="5 3 19 12 5 21 5 3" />
+                                        </svg>
+                                    </div>
+                                @endif
+                                <img src="{{ $post['image_url'] }}" alt="{{ $post['caption'] ?: 'Instagram Post' }}"
+                                    class="instagram-img" loading="lazy"
+                                    onerror="this.parentElement.classList.add('img-error')">
+                                <div class="instagram-overlay">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                        stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round" class="instagram-overlay-icon">
+                                        <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
                                     </svg>
                                 </div>
-                            @endif
-                            <img src="{{ $post['image_url'] }}" alt="{{ $post['caption'] ?: 'Instagram Post' }}" class="instagram-img" loading="lazy" onerror="this.parentElement.classList.add('img-error')">
-                            <div class="instagram-overlay">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="instagram-overlay-icon">
-                                    <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
-                                </svg>
                             </div>
-                        </div>
-                        @if ($post['caption'])
-                            <p class="instagram-caption">{{ $post['caption'] }}</p>
-                        @endif
-                    </a>
-                @endforeach
-            </div>
-        @endif
+                            @if ($post['caption'])
+                                <p class="instagram-caption">{{ $post['caption'] }}</p>
+                            @endif
+                        </a>
+                    @endforeach
+                </div>
+            @endif
 
-        <div style="text-align:center;margin-top:40px;">
-            <a href="https://www.instagram.com/{{ $this->instagramUsername }}" target="_blank" rel="noopener noreferrer" class="btn-primary" style="background:linear-gradient(135deg,#833ab4,#fd1d1d,#f77737);">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                    <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
-                    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
-                    <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
-                </svg>
-                Ikuti Kami
-            </a>
-        </div>
-    </section>
+            <div style="text-align:center;margin-top:40px;">
+                <a href="https://www.instagram.com/{{ $this->instagramUsername }}" target="_blank"
+                    rel="noopener noreferrer" class="btn-primary"
+                    style="background:linear-gradient(135deg,#833ab4,#fd1d1d,#f77737);">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+                        <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+                        <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
+                    </svg>
+                    Ikuti Kami
+                </a>
+            </div>
+        </section>
     @endif
 
     <!-- ════════════════════════════════════════════ -->
@@ -1129,10 +1198,9 @@
             <div class="footer-brand">
                 <strong style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
                     <img src="{{ asset('gambar/ppsr logo.webp') }}" alt="PPSR Logo" style="height:40px;width:auto;">
-                    {{ config('app.name', 'Berita Apps') }}
                 </strong>
-                <p>{{ config('app.name', 'Berita Apps') }} adalah platform berita terpercaya yang menyajikan informasi
-                    terkini dan akurat untuk Anda.</p>
+                <p>Portal berita resmi dari Pondok Pesantren Syafa'aturrasul. Menyajikan informasi terkini, artikel
+                    menarik, dan berita terpercaya seputar kegiatan pesantren dan dunia pendidikan Islam.</p>
             </div>
             <div class="footer-col">
                 <h4>Menu</h4>
@@ -1150,8 +1218,10 @@
             <div class="footer-col">
                 <h4>Kontak</h4>
                 <a href="#">+62 852 5987 5754</a>
-                <a href="https://www.instagram.com/{{ $this->instagramUsername }}" target="_blank" rel="noopener noreferrer" style="display:flex;align-items:center;gap:6px;">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <a href="https://www.instagram.com/{{ $this->instagramUsername }}" target="_blank"
+                    rel="noopener noreferrer" style="display:flex;align-items:center;gap:6px;">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
                         <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
                         <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
@@ -1218,7 +1288,7 @@
 
                 let currentSlide = 0;
                 let autoPlayTimer = null;
-                const INTERVAL = 6000; // 6 detik per slide
+                const INTERVAL = 4000; // 4 detik per slide
 
                 function goTo(index) {
                     if (index < 0) index = totalSlides - 1;
