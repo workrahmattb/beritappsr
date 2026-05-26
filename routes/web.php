@@ -6,6 +6,8 @@ use App\Livewire\HomePage;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', HomePage::class)->name('home');
+Route::get('/profile/pimpinan', App\Livewire\DaftarPengajar::class)->name('profile.pimpinan');
+Route::get('/profile/pengajar', App\Livewire\DaftarPengajar::class)->name('profile.pengajar');
 Route::get('/berita', AllBerita::class)->name('berita');
 Route::get('/berita/{article:slug}', App\Livewire\DetailBerita::class)->name('berita.detail');
 
