@@ -11,93 +11,7 @@
         }
         [x-cloak] { display: none !important; }
 
-        /* ── Navbar ── */
-        .navbar {
-            position: fixed; top: 0; left: 0; right: 0; z-index: 50;
-            background: rgba(255,255,255,0.95);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(22,163,74,0.1);
-            transition: box-shadow .3s;
-        }
-        .navbar.scrolled { box-shadow: 0 4px 24px rgba(22,163,74,0.08); }
-        .navbar-inner {
-            max-width: 1200px; margin: 0 auto; padding: 0 24px;
-            display: flex; align-items: center; justify-content: space-between; height: 72px;
-        }
-        .nav-logo {
-            display: flex; align-items: center; gap: 10px; text-decoration: none;
-            font-weight: 800; font-size: 1.25rem; color: #16a34a; letter-spacing: -0.5px;
-        }
-        .logo-img { height: 40px; width: auto; }
-        .nav-links { display: flex; align-items: center; gap: 32px; }
-        .nav-links a {
-            text-decoration: none; font-size: 0.88rem; font-weight: 500;
-            color: #6b7280; transition: color .2s; position: relative;
-        }
-        .nav-links a::after {
-            content: ''; position: absolute; bottom: -4px; left: 0; right: 0;
-            height: 2px; background: #16a34a; border-radius: 2px;
-            transform: scaleX(0); transition: transform .2s;
-        }
-        .nav-links a:hover { color: #16a34a; }
-        .nav-links a:hover::after { transform: scaleX(1); }
-        .nav-links a.active { color: #16a34a; }
-        .nav-links a.active::after { transform: scaleX(1); }
 
-        /* ── Nav Dropdown ── */
-        .nav-dropdown { position: relative; }
-        .nav-dropdown-trigger {
-            text-decoration: none; font-size: 0.88rem; font-weight: 500;
-            color: #6b7280; transition: color .2s; cursor: pointer; display: flex; align-items: center; gap: 4px;
-        }
-        .nav-dropdown-trigger:hover { color: #16a34a; }
-        .nav-dropdown-trigger.active { color: #16a34a; }
-        .nav-dropdown-trigger svg { transition: transform .2s; }
-        .nav-dropdown-trigger:hover svg,
-        .nav-dropdown-trigger.active svg { transform: rotate(180deg); }
-        .nav-dropdown-menu {
-            position: absolute; top: calc(100% + 8px); left: 50%; transform: translateX(-50%);
-            background: white; border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,0.12);
-            min-width: 200px; padding: 6px; opacity: 0; visibility: hidden;
-            transition: all .2s; border: 1px solid rgba(22,163,74,0.08);
-        }
-        .nav-dropdown:hover .nav-dropdown-menu,
-        .nav-dropdown-trigger.active + .nav-dropdown-menu { opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0); }
-        .nav-dropdown-menu a {
-            display: flex; align-items: center; gap: 10px; padding: 10px 14px;
-            border-radius: 8px; text-decoration: none; color: #4b5563;
-            font-size: 0.85rem; font-weight: 500; transition: all .15s;
-        }
-        .nav-dropdown-menu a:hover { background: #f0fdf4; color: #16a34a; }
-        .nav-dropdown-menu a svg { flex-shrink: 0; }
-
-        .menu-toggle {
-            display: none; flex-direction: column; gap: 5px; cursor: pointer;
-            padding: 4px; background: transparent; border: none;
-        }
-        .menu-toggle span {
-            display: block; width: 24px; height: 2.5px; background: #4b5563; border-radius: 4px;
-            transition: all .3s;
-        }
-        .menu-toggle.active span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
-        .menu-toggle.active span:nth-child(2) { opacity: 0; }
-        .menu-toggle.active span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
-        .mobile-menu {
-            display: none; flex-direction: column; gap: 4px; padding: 0 24px 20px;
-            background: white; max-width: 1200px; margin: 0 auto;
-        }
-        .mobile-menu.open { display: flex; }
-        .mobile-menu a {
-            text-decoration: none; font-size: 0.9rem; font-weight: 500;
-            color: #4b5563; padding: 10px 0; transition: color .2s;
-        }
-        .mobile-menu a:hover, .mobile-menu a.active { color: #16a34a; }
-        .mobile-sub-label {
-            font-size: 0.75rem; color: #9ca3af; padding: 4px 0 2px;
-        }
-
-        @media (max-width: 768px) { .nav-links { display: none; } .menu-toggle { display: flex; } }
 
         /* ── Page Header ── */
         .page-header {
@@ -240,84 +154,16 @@
         .animate-delay-1 { animation-delay: 0.1s; opacity: 0; }
         .animate-delay-2 { animation-delay: 0.2s; opacity: 0; }
 
-        /* ── Footer ── */
-        .footer {
-            background: #111827; padding: 48px 24px 32px; color: rgba(255,255,255,0.7);
-        }
-        .footer-inner {
-            max-width: 1200px; margin: 0 auto;
-            display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px;
-        }
-        .footer-brand { font-size: 0.9rem; line-height: 1.7; }
-        .footer-brand strong { color: white; font-size: 1.1rem; }
-        .footer-col h4 { color: white; font-size: 0.9rem; font-weight: 600; margin-bottom: 16px; }
-        .footer-col a {
-            display: block; color: rgba(255,255,255,0.6); text-decoration: none;
-            font-size: 0.85rem; margin-bottom: 10px; transition: color .2s;
-        }
-        .footer-col a:hover { color: #4ade80; }
-        .footer-bottom {
-            max-width: 1200px; margin: 32px auto 0;
-            padding-top: 24px; border-top: 1px solid rgba(255,255,255,0.08);
-            text-align: center; font-size: 0.82rem; color: rgba(255,255,255,0.4);
-        }
-
         @media (max-width: 768px) {
             .facility-grid { grid-template-columns: 1fr; }
-            .footer-inner { grid-template-columns: 1fr 1fr; }
         }
         @media (max-width: 480px) {
-            .footer-inner { grid-template-columns: 1fr; }
             .facility-carousel { height: 200px; }
         }
     </style>
     @endpush
 
-    <!-- ════════════════════════════════════════════ -->
-    <!-- NAVBAR -->
-    <!-- ════════════════════════════════════════════ -->
-    <nav class="navbar" id="navbar">
-        <div class="navbar-inner">
-            <a href="/" class="nav-logo" wire:navigate>
-                <img src="{{ asset('gambar/ppsr logo.webp') }}" alt="PPSR Logo" class="logo-img">
-            </a>
-
-            <div class="nav-links">
-                <a href="/" wire:navigate class="{{ request()->is('/') ? 'active' : '' }}">Beranda</a>
-                <div class="nav-dropdown">
-                    <span class="nav-dropdown-trigger {{ request()->is('profile*') ? 'active' : '' }}">
-                        Profile
-                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
-                    </span>
-                    <div class="nav-dropdown-menu">
-                        <a href="{{ route('profile.pimpinan') }}" wire:navigate>
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-                            Pimpinan Pondok
-                        </a>
-                        <a href="{{ route('profile.pengajar') }}" wire:navigate>
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H19a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1H6.5a1 1 0 0 1 0-5H20"/></svg>
-                            Pengajar
-                        </a>
-                    </div>
-                </div>
-                <a href="{{ route('fasilitas') }}" wire:navigate class="active">Fasilitas</a>
-                <a href="/berita" wire:navigate class="{{ request()->is('berita*') && !request()->is('profile*') ? 'active' : '' }}">Berita</a>
-            </div>
-
-            <button class="menu-toggle" id="menuToggle" aria-label="Menu">
-                <span></span><span></span><span></span>
-            </button>
-        </div>
-
-        <div class="mobile-menu" id="mobileMenu">
-            <a href="/" wire:navigate class="{{ request()->is('/') ? 'active' : '' }}">Beranda</a>
-            <div class="mobile-sub-label">Profile</div>
-            <a href="{{ route('profile.pimpinan') }}" wire:navigate style="padding-left:16px;">Pimpinan Pondok</a>
-            <a href="{{ route('profile.pengajar') }}" wire:navigate style="padding-left:16px;">Pengajar</a>
-            <a href="{{ route('fasilitas') }}" wire:navigate class="active">Fasilitas</a>
-            <a href="/berita" wire:navigate class="{{ request()->is('berita*') ? 'active' : '' }}">Berita</a>
-        </div>
-    </nav>
+    <x-public.navbar />
 
     <!-- ════════════════════════════════════════════ -->
     <!-- PAGE HEADER -->
@@ -400,62 +246,11 @@
         @endif
     </section>
 
-    <!-- ════════════════════════════════════════════ -->
-    <!-- FOOTER -->
-    <!-- ════════════════════════════════════════════ -->
-    <footer class="footer">
-        <div class="footer-inner">
-            <div class="footer-brand">
-                <strong style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">
-                    <span style="width:28px;height:28px;background:#16a34a;border-radius:8px;display:flex;align-items:center;justify-content:center;color:white;font-size:14px;font-weight:800;">P</span>
-                    {{ config('app.name', 'Berita Apps') }}
-                </strong>
-                <p>Platform informasi resmi Pondok Pesantren Syafa'aturrasul.</p>
-            </div>
-            <div class="footer-col">
-                <h4>Menu</h4>
-                <a href="/" wire:navigate>Beranda</a>
-                <a href="{{ route('fasilitas') }}" wire:navigate>Fasilitas Sekolah</a>
-                <a href="{{ route('profile.pimpinan') }}" wire:navigate>Pimpinan Pondok</a>
-                <a href="{{ route('profile.pengajar') }}" wire:navigate>Pengajar</a>
-                <a href="/berita" wire:navigate>Berita</a>
-            </div>
-            <div class="footer-col">
-                <h4>Lainnya</h4>
-                <a href="#">Kebijakan Privasi</a>
-                <a href="#">Syarat & Ketentuan</a>
-                <a href="#">FAQ</a>
-            </div>
-            <div class="footer-col">
-                <h4>Kontak</h4>
-                <a href="mailto:info@syafaturrasul.sch.id">info@syafaturrasul.sch.id</a>
-                <a href="#">+62 123 4567 890</a>
-            </div>
-        </div>
-        <div class="footer-bottom">
-            &copy; {{ date('Y') }} {{ config('app.name', 'Berita Apps') }}. All rights reserved.
-        </div>
-    </footer>
+    <x-public.footer />
 
     @push('scripts')
     <script>
-        // Navbar scroll
-        const navbar = document.getElementById('navbar');
-        if (navbar) {
-            window.addEventListener('scroll', function() {
-                if (window.scrollY > 20) { navbar.classList.add('scrolled'); }
-                else { navbar.classList.remove('scrolled'); }
-            });
-        }
-        // Mobile menu toggle
-        const menuToggle = document.getElementById('menuToggle');
-        const mobileMenu = document.getElementById('mobileMenu');
-        if (menuToggle && mobileMenu) {
-            menuToggle.addEventListener('click', function() {
-                this.classList.toggle('active');
-                mobileMenu.classList.toggle('open');
-            });
-        }
+        // Page-specific scripts here
     </script>
     @endpush
 </div>
