@@ -1008,29 +1008,34 @@
     <!-- ════════════════════════════════════════════ -->
     <nav class="navbar" id="navbar">
         <div class="navbar-inner">
-            <a href="/" class="nav-logo">
+            <a href="/" wire:navigate class="nav-logo">
                 <img src="{{ asset('gambar/ppsr logo.webp') }}" alt="PPSR Logo" class="logo-img">
             </a>
 
             <div class="nav-links">
-                <a href="/" class="{{ request()->is('/') ? 'active' : '' }}">Beranda</a>
+                <a href="/" wire:navigate class="{{ request()->is('/') ? 'active' : '' }}">Beranda</a>
                 <div class="nav-dropdown">
                     <span class="nav-dropdown-trigger {{ request()->is('profile*') ? 'active' : '' }}">
                         Profile
-                        <svg class="nav-dropdown-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <svg class="nav-dropdown-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                             <polyline points="6 9 12 15 18 9" />
                         </svg>
                     </span>
                     <div class="nav-dropdown-menu">
-                        <a href="{{ route('profile.pimpinan') }}" class="{{ request()->routeIs('profile.pimpinan') ? 'active' : '' }}">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <a href="{{ route('profile.pimpinan') }}" wire:navigate
+                            class="{{ request()->routeIs('profile.pimpinan') ? 'active' : '' }}">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
                                 <circle cx="12" cy="7" r="4" />
                             </svg>
                             Pimpinan Pondok
                         </a>
-                        <a href="{{ route('profile.pengajar') }}" class="{{ request()->routeIs('profile.pengajar') ? 'active' : '' }}">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <a href="{{ route('profile.pengajar') }}" wire:navigate
+                            class="{{ request()->routeIs('profile.pengajar') ? 'active' : '' }}">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
                                 <circle cx="9" cy="7" r="4" />
                                 <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
@@ -1040,7 +1045,8 @@
                         </a>
                     </div>
                 </div>
-                <a href="/berita" class="{{ request()->is('berita*') ? 'active' : '' }}">Berita</a>
+                <a href="{{ route('fasilitas') }}" wire:navigate class="{{ request()->routeIs('fasilitas') ? 'active' : '' }}">Fasilitas</a>
+                <a href="/berita" wire:navigate class="{{ request()->is('berita*') ? 'active' : '' }}">Berita</a>
                 <a href="#">Tentang</a>
                 <a href="#">Kontak</a>
             </div>
@@ -1053,11 +1059,12 @@
         </div>
 
         <div class="mobile-menu" id="mobileMenu">
-            <a href="/" class="{{ request()->is('/') ? 'active' : '' }}">Beranda</a>
+            <a href="/" wire:navigate class="{{ request()->is('/') ? 'active' : '' }}">Beranda</a>
             <div class="mobile-sub-label">Profile</div>
-            <a href="{{ route('profile.pimpinan') }}" class="mobile-sub-item">Pimpinan Pondok</a>
-            <a href="{{ route('profile.pengajar') }}" class="mobile-sub-item">Pengajar</a>
-            <a href="/berita" class="{{ request()->is('berita*') ? 'active' : '' }}">Berita</a>
+            <a href="{{ route('profile.pimpinan') }}" wire:navigate class="mobile-sub-item">Pimpinan Pondok</a>
+            <a href="{{ route('profile.pengajar') }}" wire:navigate class="mobile-sub-item">Pengajar</a>
+            <a href="{{ route('fasilitas') }}" wire:navigate class="{{ request()->routeIs('fasilitas') ? 'active' : '' }}">Fasilitas</a>
+            <a href="/berita" wire:navigate class="{{ request()->is('berita*') ? 'active' : '' }}">Berita</a>
             <a href="#">Tentang</a>
             <a href="#">Kontak</a>
         </div>
@@ -1076,12 +1083,14 @@
         @foreach ($heroes as $index => $hero)
             <div class="hero-slide {{ $index === 0 ? 'active' : '' }}" data-slide="{{ $index }}">
                 @if ($hero->image)
-                    <div class="hero-bg" style="background-image: url('{{ asset('storage/' . $hero->image) }}');"></div>
+                    <div class="hero-bg" style="background-image: url('{{ asset('storage/' . $hero->image) }}');">
+                    </div>
                     <div class="hero-overlay"
                         style="background: linear-gradient(135deg, rgba(0,0,0,{{ $hero->overlay_opacity / 100 }}), rgba(0,0,0,{{ ($hero->overlay_opacity - 10) / 100 }}));">
                     </div>
                 @else
-                    <div class="hero-bg" style="background: linear-gradient(135deg, #064e3b, #065f46, #047857);"></div>
+                    <div class="hero-bg" style="background: linear-gradient(135deg, #064e3b, #065f46, #047857);">
+                    </div>
                     <div class="hero-overlay" style="opacity: 0;"></div>
                 @endif
 
@@ -1214,7 +1223,8 @@
                         <div class="berita-footer">
                             <span
                                 style="font-size:0.8rem;color:#9ca3af;">{{ $article->author->name ?? 'Admin' }}</span>
-                            <a href="{{ route('berita.detail', $article->slug) }}" class="berita-readmore">
+                            <a href="{{ route('berita.detail', $article->slug) }}" wire:navigate
+                                class="berita-readmore">
                                 Baca Selengkapnya
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
                                     stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
@@ -1229,7 +1239,7 @@
             </div>
 
             <div style="text-align:center;margin-top:40px;">
-                <a href="/berita" class="btn-primary">
+                <a href="/berita" wire:navigate class="btn-primary">
                     Lihat Semua Berita
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                         stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -1352,10 +1362,11 @@
             </div>
             <div class="footer-col">
                 <h4>Menu</h4>
-                <a href="/">Beranda</a>
-                <a href="{{ route('profile.pimpinan') }}">Pimpinan Pondok</a>
-                <a href="{{ route('profile.pengajar') }}">Pengajar</a>
-                <a href="/berita">Berita</a>
+                <a href="/" wire:navigate>Beranda</a>
+                <a href="{{ route('profile.pimpinan') }}" wire:navigate>Pimpinan Pondok</a>
+                <a href="{{ route('profile.pengajar') }}" wire:navigate>Pengajar</a>
+                <a href="{{ route('fasilitas') }}" wire:navigate>Fasilitas Sekolah</a>
+                <a href="/berita" wire:navigate>Berita</a>
             </div>
             <div class="footer-col">
                 <h4>Lainnya</h4>
@@ -1366,7 +1377,7 @@
             <div class="footer-col">
                 <h4>Kontak</h4>
                 <a href="#">+62 852 5987 5754</a>
-                <a href="https://www.instagram.com/{{ $this->instagramUsername }}" target="_blank"
+                <a href="https://www.instagram.com/ponpessyafaaturrasul_official/" target="_blank"
                     rel="noopener noreferrer" style="display:flex;align-items:center;gap:6px;">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                         stroke-width="2" stroke-linecap="round" stroke-linejoin="round">

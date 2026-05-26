@@ -555,12 +555,12 @@
     <!-- ════════════════════════════════════════════ -->
     <nav class="navbar" id="navbar">
         <div class="navbar-inner">
-            <a href="/" class="nav-logo">
+            <a href="/" wire:navigate class="nav-logo">
                 <img src="{{ asset('gambar/ppsr logo.webp') }}" alt="PPSR Logo" class="logo-img">
             </a>
 
             <div class="nav-links">
-                <a href="/">Beranda</a>
+                <a href="/" wire:navigate>Beranda</a>
                 <div class="nav-dropdown">
                     <span class="nav-dropdown-trigger active">
                         Profile
@@ -569,14 +569,14 @@
                         </svg>
                     </span>
                     <div class="nav-dropdown-menu">
-                        <a href="{{ route('profile.pimpinan') }}" class="{{ request()->routeIs('profile.pimpinan') ? 'active' : '' }}">
+                        <a href="{{ route('profile.pimpinan') }}" wire:navigate class="{{ request()->routeIs('profile.pimpinan') ? 'active' : '' }}">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
                                 <circle cx="12" cy="7" r="4" />
                             </svg>
                             Pimpinan Pondok
                         </a>
-                        <a href="{{ route('profile.pengajar') }}" class="{{ request()->routeIs('profile.pengajar') ? 'active' : '' }}">
+                        <a href="{{ route('profile.pengajar') }}" wire:navigate class="{{ request()->routeIs('profile.pengajar') ? 'active' : '' }}">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
                                 <circle cx="9" cy="7" r="4" />
@@ -587,7 +587,8 @@
                         </a>
                     </div>
                 </div>
-                <a href="/berita">Berita</a>
+                <a href="{{ route('fasilitas') }}" wire:navigate class="{{ request()->routeIs('fasilitas') ? 'active' : '' }}">Fasilitas</a>
+                <a href="/berita" wire:navigate>Berita</a>
                 <a href="#">Tentang</a>
                 <a href="#">Kontak</a>
             </div>
@@ -600,11 +601,12 @@
         </div>
 
         <div class="mobile-menu" id="mobileMenu">
-            <a href="/">Beranda</a>
+            <a href="/" wire:navigate>Beranda</a>
             <div class="mobile-sub-label">Profile</div>
-            <a href="{{ route('profile.pimpinan') }}" class="mobile-sub-item">Pimpinan Pondok</a>
-            <a href="{{ route('profile.pengajar') }}" class="mobile-sub-item">Pengajar</a>
-            <a href="/berita">Berita</a>
+            <a href="{{ route('profile.pimpinan') }}" wire:navigate class="mobile-sub-item">Pimpinan Pondok</a>
+            <a href="{{ route('profile.pengajar') }}" wire:navigate class="mobile-sub-item">Pengajar</a>
+            <a href="{{ route('fasilitas') }}" wire:navigate class="{{ request()->routeIs('fasilitas') ? 'active' : '' }}">Fasilitas</a>
+            <a href="/berita" wire:navigate>Berita</a>
             <a href="#">Tentang</a>
             <a href="#">Kontak</a>
         </div>
@@ -679,10 +681,11 @@
             </div>
             <div class="footer-col">
                 <h4>Menu</h4>
-                <a href="/">Beranda</a>
-                <a href="{{ route('profile.pimpinan') }}">Pimpinan Pondok</a>
-                <a href="{{ route('profile.pengajar') }}">Pengajar</a>
-                <a href="/berita">Berita</a>
+                <a href="/" wire:navigate>Beranda</a>
+                <a href="{{ route('profile.pimpinan') }}" wire:navigate>Pimpinan Pondok</a>
+                <a href="{{ route('profile.pengajar') }}" wire:navigate>Pengajar</a>
+                <a href="{{ route('fasilitas') }}" wire:navigate>Fasilitas Sekolah</a>
+                <a href="/berita" wire:navigate>Berita</a>
             </div>
             <div class="footer-col">
                 <h4>Lainnya</h4>
