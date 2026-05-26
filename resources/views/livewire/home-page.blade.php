@@ -1045,7 +1045,8 @@
                         </a>
                     </div>
                 </div>
-                <a href="{{ route('fasilitas') }}" wire:navigate class="{{ request()->routeIs('fasilitas') ? 'active' : '' }}">Fasilitas</a>
+                <a href="{{ route('fasilitas') }}" wire:navigate
+                    class="{{ request()->routeIs('fasilitas') ? 'active' : '' }}">Fasilitas</a>
                 <a href="/berita" wire:navigate class="{{ request()->is('berita*') ? 'active' : '' }}">Berita</a>
                 <a href="#">Tentang</a>
                 <a href="#">Kontak</a>
@@ -1063,7 +1064,8 @@
             <div class="mobile-sub-label">Profile</div>
             <a href="{{ route('profile.pimpinan') }}" wire:navigate class="mobile-sub-item">Pimpinan Pondok</a>
             <a href="{{ route('profile.pengajar') }}" wire:navigate class="mobile-sub-item">Pengajar</a>
-            <a href="{{ route('fasilitas') }}" wire:navigate class="{{ request()->routeIs('fasilitas') ? 'active' : '' }}">Fasilitas</a>
+            <a href="{{ route('fasilitas') }}" wire:navigate
+                class="{{ request()->routeIs('fasilitas') ? 'active' : '' }}">Fasilitas</a>
             <a href="/berita" wire:navigate class="{{ request()->is('berita*') ? 'active' : '' }}">Berita</a>
             <a href="#">Tentang</a>
             <a href="#">Kontak</a>
@@ -1361,22 +1363,8 @@
                     menarik, dan berita terpercaya seputar kegiatan pesantren dan dunia pendidikan Islam.</p>
             </div>
             <div class="footer-col">
-                <h4>Menu</h4>
-                <a href="/" wire:navigate>Beranda</a>
-                <a href="{{ route('profile.pimpinan') }}" wire:navigate>Pimpinan Pondok</a>
-                <a href="{{ route('profile.pengajar') }}" wire:navigate>Pengajar</a>
-                <a href="{{ route('fasilitas') }}" wire:navigate>Fasilitas Sekolah</a>
-                <a href="/berita" wire:navigate>Berita</a>
-            </div>
-            <div class="footer-col">
-                <h4>Lainnya</h4>
-                <a href="#">Kebijakan Privasi</a>
-                <a href="#">Syarat & Ketentuan</a>
-                <a href="#">FAQ</a>
-            </div>
-            <div class="footer-col">
                 <h4>Kontak</h4>
-                <a href="#">+62 852 5987 5754</a>
+                <a href="http://wa.me/6285259875754">Call Center WA</a>
                 <a href="https://www.instagram.com/ponpessyafaaturrasul_official/" target="_blank"
                     rel="noopener noreferrer" style="display:flex;align-items:center;gap:6px;">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
