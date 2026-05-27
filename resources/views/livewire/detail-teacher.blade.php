@@ -259,7 +259,7 @@
                             $paragraphs = preg_split('/\n\s*\n/', trim($teacher->bio));
                         @endphp
                         @foreach ($paragraphs as $para)
-                            <p>{{ nl2br(e(trim($para))) }}</p>
+                            <p>{!! nl2br(e(trim($para))) !!}</p>
                         @endforeach
                     </div>
                 @else

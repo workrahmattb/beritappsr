@@ -314,7 +314,7 @@
                             $paragraphs = preg_split('/\n\s*\n/', trim($facility->description));
                         @endphp
                         @foreach ($paragraphs as $para)
-                            <p>{{ nl2br(e(trim($para))) }}</p>
+                            <p>{!! nl2br(e(trim($para))) !!}</p>
                         @endforeach
                     </div>
                 @else
