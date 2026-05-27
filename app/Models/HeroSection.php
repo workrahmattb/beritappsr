@@ -17,6 +17,7 @@ class HeroSection extends Model
         'overlay_opacity',
         'is_active',
         'sort_order',
+
     ];
 
     protected function casts(): array

@@ -229,7 +229,14 @@
         @if ($this->teachers->isNotEmpty())
             <div class="teacher-grid">
                 @foreach ($this->teachers as $teacher)
-                    <div class="teacher-card">
+                    @php
+                        $detailRoute = match ($teacher->category) {
+                            'pimpinan' => route('profile.pimpinan.detail', $teacher->slug),
+                            'guru'     => route('profile.pengajar.detail', $teacher->slug),
+                            default    => url('/'),
+                        };
+                    @endphp
+                    <a href="{{ $detailRoute }}" wire:navigate class="teacher-card" style="text-decoration:none;color:inherit;display:block;">
                         <div class="teacher-photo-wrap">
                             @if ($teacher->photo)
                                 <img src="{{ asset('storage/' . $teacher->photo) }}" alt="{{ $teacher->name }}" class="teacher-photo" loading="lazy">
@@ -251,7 +258,7 @@
                                 <div class="teacher-bio">{{ $teacher->bio }}</div>
                             @endif
                         </div>
-                    </div>
+                    </a>
                 @endforeach
             </div>
         @else

@@ -190,7 +190,7 @@
                         $images = $facility->images ?? [];
                         $hasImages = count($images) > 0;
                     @endphp
-                    <div class="facility-card animate-fade-up"
+                    <a href="{{ route('fasilitas.detail', $facility->slug) }}" wire:navigate class="facility-card animate-fade-up" style="text-decoration:none;color:inherit;display:block;"
                          x-data="{ currentSlide: 0, images: {{ json_encode($images) }}, totalSlides: {{ count($images) > 0 ? count($images) : 1 }} }">
                         <div class="facility-carousel">
                             @if($hasImages)
@@ -235,7 +235,7 @@
                                 <p class="facility-desc">{{ $facility->description }}</p>
                             @endif
                         </div>
-                    </div>
+                    </a>
                 @endforeach
             </div>
         @else

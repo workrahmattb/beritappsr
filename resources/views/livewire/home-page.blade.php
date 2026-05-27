@@ -19,58 +19,6 @@
                 display: none !important;
             }
 
-            @media (max-width: 768px) {
-                .carousel-arrow {
-                    width: 36px;
-                    height: 36px;
-                }
-
-                .carousel-arrow-left {
-                    left: 12px;
-                }
-
-                .carousel-arrow-right {
-                    right: 12px;
-                }
-
-                .carousel-dots {
-                    bottom: 24px;
-                }
-
-                .hero-title {
-                    font-size: clamp(1.35rem, 5vw, 1.75rem);
-                }
-
-                .hero-subtitle {
-                    font-size: clamp(0.78rem, 2.5vw, 0.92rem);
-                }
-            }
-
-            @media (max-width: 480px) {
-                .hero-title {
-                    font-size: clamp(1.2rem, 6vw, 1.35rem);
-                }
-
-                .hero-subtitle {
-                    font-size: clamp(0.72rem, 3vw, 0.78rem);
-                }
-
-                .hero-badge {
-                    font-size: 0.72rem;
-                    padding: 4px 12px;
-                }
-
-                .btn-primary {
-                    padding: 12px 24px;
-                    font-size: 0.9rem;
-                }
-
-                .btn-outline-light {
-                    padding: 10px 20px;
-                    font-size: 0.85rem;
-                }
-            }
-
             /* ── Hero ── */
             .hero {
                 min-height: 100vh;
@@ -657,6 +605,41 @@
             .animate-delay-3 {
                 animation-delay: 0.3s;
                 opacity: 0;
+            }
+
+            @media (max-width: 768px) {
+                .hero-title {
+                    font-size: clamp(1.15rem, 4.5vw, 1.5rem);
+                }
+
+                .hero-subtitle {
+                    font-size: clamp(0.72rem, 2.2vw, 0.85rem);
+                }
+            }
+
+            @media (max-width: 480px) {
+                .hero-title {
+                    font-size: clamp(1rem, 5vw, 1.15rem);
+                }
+
+                .hero-subtitle {
+                    font-size: clamp(0.68rem, 2.5vw, 0.72rem);
+                }
+
+                .hero-badge {
+                    font-size: 0.68rem;
+                    padding: 4px 10px;
+                }
+
+                .btn-primary {
+                    padding: 10px 20px;
+                    font-size: 0.85rem;
+                }
+
+                .btn-outline-light {
+                    padding: 8px 16px;
+                    font-size: 0.8rem;
+                }
             }
         </style>
     @endpush

@@ -9,6 +9,11 @@ Route::get('/', HomePage::class)->name('home');
 Route::get('/profile/pimpinan', App\Livewire\DaftarPengajar::class)->name('profile.pimpinan');
 Route::get('/profile/pengajar', App\Livewire\DaftarPengajar::class)->name('profile.pengajar');
 Route::get('/fasilitas', App\Livewire\FasilitasSekolah::class)->name('fasilitas');
+Route::get('/fasilitas/{facility:slug}', App\Livewire\DetailFasilitas::class)->name('fasilitas.detail');
+
+Route::get('/profile/pimpinan/{teacher:slug}', App\Livewire\DetailTeacher::class)->name('profile.pimpinan.detail');
+Route::get('/profile/pengajar/{teacher:slug}', App\Livewire\DetailTeacher::class)->name('profile.pengajar.detail');
+
 Route::get('/berita', AllBerita::class)->name('berita');
 Route::get('/berita/{article:slug}', App\Livewire\DetailBerita::class)->name('berita.detail');
 

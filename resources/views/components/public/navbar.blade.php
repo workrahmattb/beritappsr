@@ -210,6 +210,11 @@
         padding-left: 16px !important;
     }
 
+    /* ── Alpine x-cloak (hide until ready) ── */
+    [x-cloak] {
+        display: none !important;
+    }
+
     .menu-toggle {
         display: none;
         flex-direction: column;
@@ -281,47 +286,11 @@
 </style>
 @endpush
 
-@push('scripts')
-<script>
-    // ── Navbar scroll effect ──
-    const navbar = document.getElementById('navbar');
-    if (navbar) {
-        window.addEventListener('scroll', function() {
-            if (window.scrollY > 20) {
-                navbar.classList.add('scrolled');
-            } else {
-                navbar.classList.remove('scrolled');
-            }
-        });
-    }
-
-    // ── Mobile menu toggle ──
-    const menuToggle = document.getElementById('menuToggle');
-    const mobileMenu = document.getElementById('mobileMenu');
-    if (menuToggle && mobileMenu) {
-        menuToggle.addEventListener('click', function() {
-            this.classList.toggle('active');
-            mobileMenu.classList.toggle('open');
-        });
-    }
-
-    // ── Smooth scroll for anchor links ──
-    document.querySelectorAll('#navbar a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function(e) {
-            const target = document.querySelector(this.getAttribute('href'));
-            if (target) {
-                e.preventDefault();
-                target.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'start'
-                });
-            }
-        });
-    });
-</script>
-@endpush
-
-<nav class="navbar" id="navbar">
+<nav class="navbar" id="navbar"
+     x-data="{ mobileOpen: false, scrolled: false }"
+     x-init="$nextTick(() => { scrolled = window.scrollY > 20 })"
+     @scroll.window="scrolled = window.scrollY > 20"
+     :class="{ 'scrolled': scrolled }">
     <div class="navbar-inner">
         <a href="/" wire:navigate class="nav-logo">
             <img src="{{ asset('gambar/ppsr logo.webp') }}" alt="PPSR Logo" class="logo-img">
@@ -372,22 +341,22 @@
             <a href="#">Kontak</a>
         </div>
 
-        <button class="menu-toggle" id="menuToggle" aria-label="Menu">
+        <button class="menu-toggle" :class="{ 'active': mobileOpen }" @click="mobileOpen = !mobileOpen" aria-label="Menu">
             <span></span>
             <span></span>
             <span></span>
         </button>
     </div>
 
-    <div class="mobile-menu" id="mobileMenu">
-        <a href="/" wire:navigate class="{{ request()->is('/') ? 'active' : '' }}">Beranda</a>
+    <div class="mobile-menu" :class="{ 'open': mobileOpen }" x-cloak>
+        <a href="/" wire:navigate @click="mobileOpen = false" class="{{ request()->is('/') ? 'active' : '' }}">Beranda</a>
         <div class="mobile-sub-label">Profile</div>
-        <a href="{{ route('profile.pimpinan') }}" wire:navigate class="mobile-sub-item">Pimpinan Pondok</a>
-        <a href="{{ route('profile.pengajar') }}" wire:navigate class="mobile-sub-item">Pengajar</a>
-        <a href="{{ route('fasilitas') }}" wire:navigate
+        <a href="{{ route('profile.pimpinan') }}" wire:navigate @click="mobileOpen = false" class="mobile-sub-item">Pimpinan Pondok</a>
+        <a href="{{ route('profile.pengajar') }}" wire:navigate @click="mobileOpen = false" class="mobile-sub-item">Pengajar</a>
+        <a href="{{ route('fasilitas') }}" wire:navigate @click="mobileOpen = false"
             class="{{ request()->routeIs('fasilitas') ? 'active' : '' }}">Fasilitas</a>
-        <a href="/berita" wire:navigate class="{{ request()->is('berita*') && !request()->is('/') ? 'active' : '' }}">Berita</a>
-        <a href="#">Tentang</a>
-        <a href="#">Kontak</a>
+        <a href="/berita" wire:navigate @click="mobileOpen = false" class="{{ request()->is('berita*') && !request()->is('/') ? 'active' : '' }}">Berita</a>
+        <a href="#" @click.prevent="mobileOpen = false">Tentang</a>
+        <a href="#" @click.prevent="mobileOpen = false">Kontak</a>
     </div>
 </nav>
