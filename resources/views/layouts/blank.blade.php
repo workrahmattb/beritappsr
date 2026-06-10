@@ -18,6 +18,8 @@
 <body>
     {{ $slot }}
 
+    <x-whatsapp-float />
+
     @livewireScripts
     @stack('scripts')
 </body>

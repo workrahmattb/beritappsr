@@ -3,9 +3,13 @@
 use App\Livewire\Admin\AdminBerita;
 use App\Livewire\AllBerita;
 use App\Livewire\HomePage;
+use App\Livewire\KontakPage;
+use App\Livewire\TentangPage;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', HomePage::class)->name('home');
+Route::get('/tentang', TentangPage::class)->name('tentang');
+Route::get('/kontak', KontakPage::class)->name('kontak');
 Route::get('/profile/pimpinan', App\Livewire\DaftarPengajar::class)->name('profile.pimpinan');
 Route::get('/profile/pengajar', App\Livewire\DaftarPengajar::class)->name('profile.pengajar');
 Route::get('/fasilitas', App\Livewire\FasilitasSekolah::class)->name('fasilitas');

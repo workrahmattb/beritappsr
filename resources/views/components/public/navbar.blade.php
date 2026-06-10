@@ -337,8 +337,10 @@
             <a href="/berita" wire:navigate
                 class="{{ request()->is('berita*') && !request()->is('/') ? 'active' : '' }}">Berita</a>
 
-            <a href="#">Tentang</a>
-            <a href="#">Kontak</a>
+            <a href="{{ route('tentang') }}" wire:navigate
+                class="{{ request()->routeIs('tentang') ? 'active' : '' }}">Tentang</a>
+            <a href="{{ route('kontak') }}" wire:navigate
+                class="{{ request()->routeIs('kontak') ? 'active' : '' }}">Kontak</a>
         </div>
 
         <button class="menu-toggle" :class="{ 'active': mobileOpen }" @click="mobileOpen = !mobileOpen" aria-label="Menu">
@@ -356,7 +358,9 @@
         <a href="{{ route('fasilitas') }}" wire:navigate @click="mobileOpen = false"
             class="{{ request()->routeIs('fasilitas') ? 'active' : '' }}">Fasilitas</a>
         <a href="/berita" wire:navigate @click="mobileOpen = false" class="{{ request()->is('berita*') && !request()->is('/') ? 'active' : '' }}">Berita</a>
-        <a href="#" @click.prevent="mobileOpen = false">Tentang</a>
-        <a href="#" @click.prevent="mobileOpen = false">Kontak</a>
+        <a href="{{ route('tentang') }}" wire:navigate @click="mobileOpen = false"
+            class="{{ request()->routeIs('tentang') ? 'active' : '' }}">Tentang</a>
+        <a href="{{ route('kontak') }}" wire:navigate @click="mobileOpen = false"
+            class="{{ request()->routeIs('kontak') ? 'active' : '' }}">Kontak</a>
     </div>
 </nav>
