@@ -43,7 +43,7 @@ class DetailBerita extends Component
                 'title'      => $article->title.' — Ponpes Kuansing',
                 'metaDescription' => $summary,
                 'ogTitle'    => $article->title.' — Pondok Pesantren Syafa\'aturrasul',
-                'ogDescription' => $summary,
+                'ogDescription' => '',
                 'ogImage'    => $ogImage,
                 'ogType'     => 'article',
                 'canonicalUrl' => route('berita.detail', $article->slug),

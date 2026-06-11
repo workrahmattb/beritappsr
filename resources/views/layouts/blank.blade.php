@@ -30,7 +30,9 @@
 
     {{-- Open Graph --}}
     <meta property="og:title" content="{{ $ogTitle }}">
-    <meta property="og:description" content="{{ $ogDescription }}">
+    @filled($ogDescription)
+        <meta property="og:description" content="{{ $ogDescription }}">
+    @endfilled
     <meta property="og:image" content="{{ $ogImage }}">
     <meta property="og:url" content="{{ $canonicalUrl }}">
     <meta property="og:type" content="{{ $ogType }}">
@@ -40,7 +42,9 @@
     {{-- Twitter Card --}}
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="{{ $ogTitle }}">
-    <meta name="twitter:description" content="{{ $ogDescription }}">
+    @filled($ogDescription)
+        <meta name="twitter:description" content="{{ $ogDescription }}">
+    @endfilled
     <meta name="twitter:image" content="{{ $ogImage }}">
 
     {{-- Google Search Console --}}
