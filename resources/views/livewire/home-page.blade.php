@@ -732,7 +732,7 @@
                                     <polyline points="12 5 19 12 12 19" />
                                 </svg>
                             </a>
-                            <a href="#" class="btn-outline-light">
+                            <a href="{{ route('tentang') }}" wire:navigate class="btn-outline-light">
                                 Tentang Kami
                                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
                                     stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
