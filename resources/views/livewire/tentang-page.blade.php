@@ -1,15 +1,6 @@
 <div>
     @push('styles')
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: 'Inter', sans-serif;
-            background: #f9fafb;
-            color: #1f2937;
-            -webkit-font-smoothing: antialiased;
-        }
-        [x-cloak] { display: none !important; }
-
         /* ── Page Header ── */
         .page-header {
             background: linear-gradient(135deg, #064e3b, #047857, #16a34a);
@@ -152,10 +143,6 @@
             to { opacity: 1; transform: translateY(0); }
         }
         .animate-fade-up { animation: fadeUp 0.6s ease-out forwards; }
-        .animate-delay-1 { animation-delay: 0.1s; opacity: 0; }
-        .animate-delay-2 { animation-delay: 0.2s; opacity: 0; }
-        .animate-delay-3 { animation-delay: 0.3s; opacity: 0; }
-
         /* ── Responsive ── */
         @media (max-width: 768px) {
             .about-body { padding: 24px; }

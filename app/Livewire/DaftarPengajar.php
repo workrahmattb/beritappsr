@@ -41,7 +41,19 @@ class DaftarPengajar extends Component
 
     public function render()
     {
+        $title = $this->title;
+        $description = match ($this->category) {
+            'pimpinan' => 'Profil lengkap Pimpinan Pondok Pesantren Syafa\'aturrasul Kuantan Singingi (Ponpes Kuansing) — DR. KH. Hamdani Purba, Lc., MA beserta jajaran pimpinan pondok.',
+            'guru'     => 'Daftar tenaga pengajar (guru/ustadz) Pondok Pesantren Syafa\'aturrasul Kuansing. Kenali para pendidik yang mengajar di Ponpes Syafa\'aturrasul.',
+            default    => 'Seluruh tenaga pendidik dan pimpinan Pondok Pesantren Syafa\'aturrasul Kuantan Singingi — Ponpes Kuansing.',
+        };
+
         return view('livewire.daftar-pengajar')
-            ->layout('layouts.blank');
+            ->layout('layouts.blank', [
+                'title'      => $title.' — Ponpes Kuansing',
+                'metaDescription' => $description,
+                'ogTitle'    => $title.' — Pondok Pesantren Syafa\'aturrasul',
+                'ogDescription' => $description,
+            ]);
     }
 }

@@ -1,22 +1,8 @@
 <div>
     @push('styles')
         <style>
-            * {
-                margin: 0;
-                padding: 0;
-                box-sizing: border-box;
-            }
-
             body {
-                font-family: 'Inter', sans-serif;
                 background: #ffffff;
-                color: #1f2937;
-                -webkit-font-smoothing: antialiased;
-            }
-
-            /* ── Alpine x-cloak ── */
-            [x-cloak] {
-                display: none !important;
             }
 
             /* ── Hero ── */
@@ -654,10 +640,44 @@
         $heroCount = $heroes->count();
     @endphp
 
-    <section class="hero" id="hero" data-hero-carousel>
+    <section class="hero" id="hero"
+        x-data="{
+            currentSlide: 0,
+            totalSlides: {{ $heroCount }},
+            autoplayTimer: null,
+            init() {
+                if (this.totalSlides > 1) this.startAutoplay();
+            },
+            goTo(index) {
+                if (index < 0) index = this.totalSlides - 1;
+                if (index >= this.totalSlides) index = 0;
+                this.currentSlide = index;
+                this.resetAutoplay();
+            },
+            next() { this.goTo(this.currentSlide + 1); },
+            prev() { this.goTo(this.currentSlide - 1); },
+            startAutoplay() {
+                this.stopAutoplay();
+                this.autoplayTimer = setInterval(() => this.next(), 4000);
+            },
+            stopAutoplay() {
+                if (this.autoplayTimer) { clearInterval(this.autoplayTimer); this.autoplayTimer = null; }
+            },
+            resetAutoplay() { this.startAutoplay(); }
+        }"
+        @mouseenter="stopAutoplay()"
+        @mouseleave="startAutoplay()"
+        @keydown.window.arrow-left="
+            const rect = $el.getBoundingClientRect();
+            if (rect.top < window.innerHeight && rect.bottom > 0) { $event.preventDefault(); prev(); }
+        "
+        @keydown.window.arrow-right="
+            const rect = $el.getBoundingClientRect();
+            if (rect.top < window.innerHeight && rect.bottom > 0) { $event.preventDefault(); next(); }
+        ">
         {{-- Slides --}}
         @foreach ($heroes as $index => $hero)
-            <div class="hero-slide {{ $index === 0 ? 'active' : '' }}" data-slide="{{ $index }}">
+            <div class="hero-slide" :class="{ 'active': currentSlide === {{ $index }} }">
                 @if ($hero->image)
                     <div class="hero-bg" style="background-image: url('{{ asset('storage/' . $hero->image) }}');">
                     </div>
@@ -729,20 +749,21 @@
         @endforeach
 
         @if ($heroCount > 1)
-            <div class="carousel-dots" id="carouselDots">
+            <div class="carousel-dots">
                 @foreach ($heroes as $index => $hero)
-                    <button class="carousel-dot {{ $index === 0 ? 'active' : '' }}" data-dot="{{ $index }}"
+                    <button class="carousel-dot" :class="{ 'active': currentSlide === {{ $index }} }"
+                        @click="goTo({{ $index }})"
                         aria-label="Slide {{ $index + 1 }}"></button>
                 @endforeach
             </div>
 
-            <button class="carousel-arrow carousel-arrow-left" id="carouselPrev" aria-label="Previous slide">
+            <button class="carousel-arrow carousel-arrow-left" @click="prev" aria-label="Previous slide">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                     stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                     <polyline points="15 18 9 12 15 6" />
                 </svg>
             </button>
-            <button class="carousel-arrow carousel-arrow-right" id="carouselNext" aria-label="Next slide">
+            <button class="carousel-arrow carousel-arrow-right" @click="next" aria-label="Next slide">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                     stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                     <polyline points="9 18 15 12 9 6" />
@@ -941,101 +962,6 @@
                     }
                 });
             });
-
-            // ── Hero Carousel ──
-            (function() {
-                const hero = document.getElementById('hero');
-                if (!hero) return;
-
-                const slides = hero.querySelectorAll('.hero-slide');
-                const dots = hero.querySelectorAll('.carousel-dot');
-                const prevBtn = document.getElementById('carouselPrev');
-                const nextBtn = document.getElementById('carouselNext');
-                const totalSlides = slides.length;
-
-                if (totalSlides <= 1) return;
-
-                let currentSlide = 0;
-                let autoPlayTimer = null;
-                const INTERVAL = 4000; // 4 detik per slide
-
-                function goTo(index) {
-                    if (index < 0) index = totalSlides - 1;
-                    if (index >= totalSlides) index = 0;
-
-                    slides.forEach(function(slide, i) {
-                        slide.classList.toggle('active', i === index);
-                    });
-
-                    dots.forEach(function(dot, i) {
-                        dot.classList.toggle('active', i === index);
-                    });
-
-                    currentSlide = index;
-                    resetAutoPlay();
-                }
-
-                function next() {
-                    goTo(currentSlide + 1);
-                }
-
-                function prev() {
-                    goTo(currentSlide - 1);
-                }
-
-                function startAutoPlay() {
-                    stopAutoPlay();
-                    autoPlayTimer = setInterval(next, INTERVAL);
-                }
-
-                function stopAutoPlay() {
-                    if (autoPlayTimer) {
-                        clearInterval(autoPlayTimer);
-                        autoPlayTimer = null;
-                    }
-                }
-
-                function resetAutoPlay() {
-                    startAutoPlay();
-                }
-
-                // ── Event Listeners ──
-                if (prevBtn) {
-                    prevBtn.addEventListener('click', prev);
-                }
-
-                if (nextBtn) {
-                    nextBtn.addEventListener('click', next);
-                }
-
-                dots.forEach(function(dot) {
-                    dot.addEventListener('click', function() {
-                        goTo(parseInt(this.getAttribute('data-dot')));
-                    });
-                });
-
-                // Pause auto-play saat hover
-                hero.addEventListener('mouseenter', stopAutoPlay);
-                hero.addEventListener('mouseleave', startAutoPlay);
-
-                // Keyboard navigation
-                document.addEventListener('keydown', function(e) {
-                    // Only if hero is in viewport
-                    const rect = hero.getBoundingClientRect();
-                    if (rect.top < window.innerHeight && rect.bottom > 0) {
-                        if (e.key === 'ArrowLeft') {
-                            prev();
-                            e.preventDefault();
-                        } else if (e.key === 'ArrowRight') {
-                            next();
-                            e.preventDefault();
-                        }
-                    }
-                });
-
-                // Start
-                startAutoPlay();
-            })();
         </script>
     @endpush
 </div>

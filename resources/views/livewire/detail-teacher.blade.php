@@ -1,15 +1,6 @@
 <div>
     @push('styles')
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: 'Inter', sans-serif;
-            background: #f9fafb;
-            color: #1f2937;
-            -webkit-font-smoothing: antialiased;
-        }
-        [x-cloak] { display: none !important; }
-
         /* ── Page Header ── */
         .page-header {
             background: linear-gradient(135deg, #059669, #16a34a, #22c55e);
@@ -186,16 +177,7 @@
         .empty-state {
             text-align: center; padding: 40px 0; color: #9ca3af;
         }
-        .empty-state p { font-size: 0.95rem; }
-
-        /* ── Animations ── */
-        @keyframes fadeUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .animate-fade-up { animation: fadeUp 0.6s ease-out forwards; }
-        .animate-delay-1 { animation-delay: 0.1s; opacity: 0; }
-        .animate-delay-2 { animation-delay: 0.2s; opacity: 0; }
+        .empty-state p { font-size: 0.95rem;        }
 
         @media (max-width: 768px) {
             .profile-body { padding: 100px 24px 32px; }

@@ -341,6 +341,8 @@
                 class="{{ request()->routeIs('tentang') ? 'active' : '' }}">Tentang</a>
             <a href="{{ route('kontak') }}" wire:navigate
                 class="{{ request()->routeIs('kontak') ? 'active' : '' }}">Kontak</a>
+            <a href="https://lws.syafaaturrasul.com" target="_blank" rel="noopener noreferrer"
+                style="background:linear-gradient(135deg,#b8860b,#daa520);color:white;padding:6px 16px;border-radius:8px;font-weight:600;">Wakaf</a>
         </div>
 
         <button class="menu-toggle" :class="{ 'active': mobileOpen }" @click="mobileOpen = !mobileOpen" aria-label="Menu">
@@ -362,5 +364,7 @@
             class="{{ request()->routeIs('tentang') ? 'active' : '' }}">Tentang</a>
         <a href="{{ route('kontak') }}" wire:navigate @click="mobileOpen = false"
             class="{{ request()->routeIs('kontak') ? 'active' : '' }}">Kontak</a>
+        <a href="https://lws.syafaaturrasul.com" target="_blank" rel="noopener noreferrer" @click="mobileOpen = false"
+            style="color:#b8860b;font-weight:700;">Wakaf</a>
     </div>
 </nav>

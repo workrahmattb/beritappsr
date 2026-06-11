@@ -525,4 +525,194 @@ php artisan make:filament-resource Nama --generate  # Generate resource
 
 ---
 
-*Terakhir diperbarui: 10 Juni 2026*
+## 🌐 SEO (Search Engine Optimization)
+
+Ditambahkan pada 11 Juni 2026 untuk mendongkrak peringkat Google.
+
+### ✅ Perubahan yang Dilakukan
+
+#### 1. Layout (`blank.blade.php`) — Meta Tags Universal
+
+Semua halaman publik otomatis punya:
+- `<title>` dinamis per halaman (`{judul} - Pondok Pesantren Syafa'aturrasul`)
+- `<meta name="description">` — deskripsi spesifik per halaman
+- `<meta name="keywords">` — semua keywords utama:
+  - Ponpes Kuansing, Pondok Pesantren Syafaaturrasul, Pondok Pesantren Syafa'aturrasul
+  - Pondok Pesantren Kuantan Singingi, Pondok Pesantren Kuansing
+  - Kiyai Kuansing, Kiyai Hamdani, DR. KH. Hamdani Purba, Lc., MA
+- `<link rel="canonical">` — setiap halaman punya canonical URL
+- `<meta name="robots">` — index, follow
+- **Open Graph (OG)** — og:title, og:description, og:image, og:url, og:type, og:site_name, og:locale
+- **Twitter Card** — summary_large_image
+- **Google Search Console** — placeholder `google-site-verification` (isi dari .env)
+- **JSON-LD Structured Data** — `EducationalOrganization` Schema.org:
+  - Nama, alternatif nama, deskripsi, URL, logo
+  - Founder: DR. KH. Hamdani Purba, Lc., MA / Kiyai Hamdani
+  - Alamat: Kuantan Singingi, Riau, Indonesia
+  - SameAs: Instagram resmi
+
+#### 2. Setiap Halaman Punya SEO Spesifik
+
+| Halaman | Title Tag | Meta Description Khusus | OG Image |
+|---------|-----------|------------------------|----------|
+| Home | `Syafa'aturrasul — Ponpes Kuansing ...` | ✅ Deskripsi lengkap pesantren | Logo default |
+| Berita | `Berita — Pondok Pesantren Syafa'aturrasul` | ✅ Kegiatan & berita pesantren | Logo default |
+| Detail Berita | `{judul artikel} — Ponpes Kuansing` | ✅ Ringkasan artikel (160 char) | OG image → article image → logo |
+| Pimpinan | `Pimpinan Pondok — Ponpes Kuansing` | ✅ Profil pimpinan & Kiyai Hamdani | Logo default |
+| Pengajar | `Pengajar — Ponpes Kuansing` | ✅ Daftar guru/ustadz | Logo default |
+| Detail Pengajar | `{nama} — {kategori} Ponpes Kuansing` | ✅ Bio (160 char) | Foto teacher → logo |
+| Fasilitas | `Fasilitas — Ponpes Kuansing` | ✅ Sarana & prasarana pesantren | Logo default |
+| Detail Fasilitas | `{nama} — Fasilitas Ponpes Kuansing` | ✅ Deskripsi fasilitas (160 char) | Gambar pertama → logo |
+| Kontak | `Kontak — Ponpes Kuansing` | ✅ WhatsApp & info pendaftaran | Logo default |
+| Tentang | `Tentang — Ponpes Kuansing` | ✅ Visi, misi, sejarah (160 char) | Foto tentang → logo |
+
+### 🔧 Cara Menambahkan Google Search Console
+
+1. Dapatkan meta tag verifikasi dari [Google Search Console](https://search.google.com/search-console)
+2. Tambahkan ke `.env`:
+   ```
+   GOOGLE_VERIFICATION=xxxxxxxxxxx
+   ```
+3. Verifikasi selesai
+
+### 📝 Catatan
+
+- Canonical URL otomatis menggunakan `url()->current()` jika tidak di-set manual
+- OG Image punya **fallback chain**: halaman spesifik → logo default
+- JSON-LD menggunakan `@json()` dengan `JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE` agar output valid
+- Keywords sudah ditanam di `meta keywords` dan juga di `meta description` setiap halaman
+
+---
+
+## ⚡ Optimasi Performa & Code Quality (11 Juni 2026)
+
+### 1. 🎨 CSS Refactoring — Shared CSS ke `app.css`
+
+**Masalah:** Setiap file Blade mendefinisikan ulang CSS reset, body, x-cloak, dan animasi yang sama.
+
+**Solusi:** Pindahkan CSS bersama ke `resources/css/app.css`:
+- `* { margin: 0; padding: 0; box-sizing: border-box; }`
+- `body { font-family: 'Inter', ... }` (default: `#f9fafb`)
+- `[x-cloak] { display: none !important; }`
+- `@keyframes fadeUp` + `.animate-fade-up`, `.animate-delay-1/2/3`
+
+**File yang diubah:**
+- `resources/css/app.css` — ✅ Ditambahkan shared styles
+- `home-page.blade.php` — ✅ Hanya override `body { background: #ffffff }` yang tersisa
+- `daftar-pengajar.blade.php` — ✅ Hapus reset + body
+- `fasilitas-sekolah.blade.php` — ✅ Hapus reset + body + x-cloak
+- `kontak-page.blade.php` — ✅ Hapus reset + body + x-cloak + animasi
+- `tentang-page.blade.php` — ✅ Hapus reset + body + x-cloak + animasi
+- `detail-berita.blade.php` — ✅ Hapus reset + body + x-cloak + animasi
+- `detail-teacher.blade.php` — ✅ Hapus reset + body + x-cloak + animasi
+- `detail-fasilitas.blade.php` — ✅ Hapus reset + body + x-cloak + animasi
+- `all-berita.blade.php` — ✅ Hapus reset + body + x-cloak + animasi
+
+**Manfaat:**
+- ✅ File Blade lebih bersih dan fokus ke CSS spesifik halaman
+- ✅ Vite compile CSS sekali, browser cache lebih optimal
+- ✅ Maintenance mudah — ganti global style di 1 file
+
+---
+
+### 2. 🔄 Hero Carousel — Vanilla JS ke Alpine.js
+
+**Masalah:** Hero carousel menggunakan vanilla JS di `@push('scripts')` yang tidak SPA-safe (tidak jalan ulang setelah `wire:navigate`).
+
+**Solusi:** Konversi ke Alpine.js `x-data`:
+- State: `currentSlide`, `totalSlides`, `autoplayTimer`
+- Methods: `goTo()`, `next()`, `prev()`, `startAutoplay()`, `stopAutoplay()`, `resetAutoplay()`
+- Events: `@mouseenter`, `@mouseleave`, `@keydown.window.arrow-left/right`
+- Binding: `:class="{ 'active': currentSlide === index }"`
+
+**File:** `resources/views/livewire/home-page.blade.php`
+
+**Behavior same:**
+- ✅ Auto-play 4 detik
+- ✅ Dot navigation
+- ✅ Prev/Next buttons
+- ✅ Pause on hover
+- ✅ Keyboard navigation (ArrowLeft/ArrowRight) — hanya jika hero di viewport
+- ✅ SPA-safe — state bertahan setelah navigasi
+
+---
+
+### 3. ❌ Caching Data Publik — Dihapus (Error Unserialize)
+
+**Masalah:** Awalnya ditambahkan `Cache::remember()` untuk cache data publik, tapi menyebabkan error:
+```
+The script tried to call a method on an incomplete object.
+Class "Illuminate\Database\Eloquent\Collection" not loaded before unserialize()
+```
+
+**Penyebab:** Database cache driver (`CACHE_STORE=database`) tidak bisa meng-unserialize Eloquent models/collections dengan andal — class definitions belum di-load saat unserialize dipanggil.
+
+**Solusi:** Hapus SEMUA `Cache::remember()` dari semua Livewire components:
+
+| Komponen | Method | Status |
+|----------|--------|--------|
+| HomePage | `#[Computed] heroSections()` | ❌ Dihapus |
+| HomePage | `#[Computed] articles()` | ❌ Dihapus |
+| AllBerita | `#[Computed] articles()` | ❌ Dihapus |
+| DetailBerita | `#[Computed] relatedArticles()` | ❌ Dihapus |
+| DaftarPengajar | `getTeachersProperty()` (computed) | ❌ Dihapus |
+| DetailTeacher | `#[Computed] relatedTeachers()` | ❌ Dihapus |
+| DetailFasilitas | `#[Computed] relatedFacilities()` | ❌ Dihapus |
+| FasilitasSekolah | `render()` | ❌ Dihapus |
+| KontakPage | `render()` | ❌ Dihapus |
+| TentangPage | `render()` | ❌ Dihapus |
+
+**File yang diubah (semua revert ke query langsung):**
+- `app/Livewire/HomePage.php`
+- `app/Livewire/AllBerita.php`
+- `app/Livewire/DetailBerita.php`
+- `app/Livewire/DaftarPengajar.php`
+- `app/Livewire/FasilitasSekolah.php`
+- `app/Livewire/DetailFasilitas.php`
+- `app/Livewire/DetailTeacher.php`
+- `app/Livewire/KontakPage.php`
+- `app/Livewire/TentangPage.php`
+
+**Jika ingin caching diaktifkan di masa depan:**
+1. Ganti `CACHE_STORE=database` → `CACHE_STORE=file` di `.env` (lebih stabil untuk serialisasi PHP objects)
+2. Atau cache data sebagai **array** (`->toArray()`) bukan Eloquent models langsung
+
+---
+
+## 🔗 Navigasi & UI (11 Juni 2026)
+
+### 1. 🖼️ Favicon — Ganti Logo Laravel ke Logo PPSR
+
+**Masalah:** Logo Laravel muncul di Google Search dan browser tab karena:
+- `public/favicon.ico` masih logo Laravel default
+- `public/favicon.svg` masih logo Laravel (
+#FF2D20)
+- Layout merefer `gambar/favicon.ico` yang tidak ada (broken link)
+
+**Solusi:**
+- ✅ `public/favicon.ico` — ❌ Dihapus (browser fallback ke `<link rel="icon">`)
+- ✅ `public/favicon.svg` — 🔧 Diganti dengan SVG yang render logo PPSR
+- ✅ `public/gambar/favicon.png` — ✅ Dibuat baru (32x32, konversi dari `ppsr logo.webp` via PHP GD)
+- ✅ `resources/views/layouts/blank.blade.php` — 🔧 Update semua referensi favicon:
+  - `favicon.png` untuk icon utama (32x32)
+  - `favicon.svg` sebagai fallback SVG
+  - `apple-touch-icon` 180x180
+  - `mask-icon` untuk Safari pinned tab
+  - `msapplication-TileImage/Color` untuk Windows tiles
+  - `theme-color` = `#16a34a` (hijau tema website)
+
+### 2. 🔗 Link Wakaf — Navbar & Footer
+
+**Link:** `https://lws.syafaaturrasul.com` (tab baru)
+
+**Navbar Desktop:** Tombol emas gradient (`#b8860b → #daa520`) sebagai CTA
+**Navbar Mobile:** Teks emas dengan font tebal + `@click="mobileOpen = false"`
+**Footer:** Link emas di kolom "Menu" setelah Berita
+
+**File diubah:**
+- `resources/views/components/public/navbar.blade.php`
+- `resources/views/components/public/footer.blade.php`
+
+---
+
+*Terakhir diperbarui: 11 Juni 2026*

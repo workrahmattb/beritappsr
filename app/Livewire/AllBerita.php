@@ -35,6 +35,10 @@ class AllBerita extends Component
     public function render()
     {
         return view('livewire.all-berita')
-            ->layout('layouts.blank', ['title' => 'Berita']);
+            ->layout('layouts.blank', [
+                'title'      => 'Berita — Pondok Pesantren Syafa\'aturrasul',
+                'metaDescription' => 'Kumpulan berita terbaru Pondok Pesantren Syafa\'aturrasul Kuantan Singingi (Ponpes Kuansing). Informasi kegiatan pesantren, artikel pendidikan Islam, dan pengumuman terbaru.',
+                'ogTitle'    => 'Berita Terbaru — Ponpes Kuansing',
+            ]);
     }
 }

@@ -49,7 +49,14 @@ class HomePage extends Component
 
     public function render()
     {
+        $seoDescription = 'Pondok Pesantren Syafa\'aturrasul Kuantan Singingi (Ponpes Kuansing) — Portal berita resmi dan profil pondok pesantren di bawah naungan DR. KH. Hamdani Purba, Lc., MA. Informasi pendaftaran santri baru, kegiatan pesantren, dan pendidikan Islam.';
+
         return view('livewire.home-page')
-            ->layout('layouts.blank', ['title' => "Syafa'aturrasul"]);
+            ->layout('layouts.blank', [
+                'title'      => "Syafa'aturrasul — Ponpes Kuansing",
+                'metaDescription' => $seoDescription,
+                'ogTitle'    => "Pondok Pesantren Syafa'aturrasul — Ponpes Kuansing",
+                'ogDescription' => $seoDescription,
+            ]);
     }
 }

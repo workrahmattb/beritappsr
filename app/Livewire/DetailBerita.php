@@ -31,7 +31,22 @@ class DetailBerita extends Component
 
     public function render()
     {
+        $article = $this->article;
+        $summary = $article->summary ?: strip_tags($article->content);
+        $summary = mb_strlen($summary) > 160 ? mb_substr($summary, 0, 157).'...' : $summary;
+        $ogImage = $article->og_image 
+            ? asset('storage/'.$article->og_image) 
+            : ($article->image ? asset('storage/'.$article->image) : asset('gambar/ppsr logo.webp'));
+
         return view('livewire.detail-berita')
-            ->layout('layouts.blank', ['title' => $this->article->title]);
+            ->layout('layouts.blank', [
+                'title'      => $article->title.' — Ponpes Kuansing',
+                'metaDescription' => $summary,
+                'ogTitle'    => $article->title.' — Pondok Pesantren Syafa\'aturrasul',
+                'ogDescription' => $summary,
+                'ogImage'    => $ogImage,
+                'ogType'     => 'article',
+                'canonicalUrl' => route('berita.detail', $article->slug),
+            ]);
     }
 }

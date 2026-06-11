@@ -1,21 +1,6 @@
 <div>
     @push('styles')
         <style>
-            * {
-                margin: 0;
-                padding: 0;
-                box-sizing: border-box;
-            }
-
-            body {
-                font-family: 'Inter', sans-serif;
-                background: #f9fafb;
-                color: #1f2937;
-                -webkit-font-smoothing: antialiased;
-            }
-
-
-
             /* ── Page Header ── */
             .page-header {
                 background: linear-gradient(135deg, #059669, #16a34a, #22c55e);

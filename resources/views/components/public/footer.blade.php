@@ -103,6 +103,8 @@
             <a href="{{ route('profile.pengajar') }}" wire:navigate>Pengajar</a>
             <a href="{{ route('fasilitas') }}" wire:navigate>Fasilitas</a>
             <a href="/berita" wire:navigate>Berita</a>
+            <a href="https://lws.syafaaturrasul.com" target="_blank" rel="noopener noreferrer"
+                style="color:#daa520;font-weight:600;">Wakaf</a>
         </div>
         <div class="footer-col">
             <h4>Lainnya</h4>
