@@ -1,429 +1,65 @@
 <div>
-    @push('styles')
-    <style>
-        /* ── Page Header ── */
-        .page-header {
-            background: linear-gradient(135deg, #064e3b, #047857, #16a34a);
-            padding: 120px 24px 40px;
-            position: relative;
-            overflow: hidden;
-        }
-        .page-header::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-            opacity: 0.3;
-        }
-        .page-header > * { position: relative; z-index: 1; }
-        .page-header-inner {
-            max-width: 800px;
-            margin: 0 auto;
-        }
-        .back-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            color: rgba(255,255,255,0.8);
-            text-decoration: none;
-            font-size: 0.9rem;
-            margin-bottom: 20px;
-            transition: color .2s;
-        }
-        .back-link:hover { color: white; }
-        .page-header .article-meta {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            flex-wrap: wrap;
-            margin-bottom: 16px;
-        }
-        .page-header .article-meta span {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            color: rgba(255,255,255,0.75);
-            font-size: 0.85rem;
-        }
-        .page-header h1 {
-            font-size: clamp(1.75rem, 4vw, 2.5rem);
-            font-weight: 800;
-            color: white;
-            letter-spacing: -0.5px;
-            line-height: 1.2;
-            margin-bottom: 0;
-        }
-
-        /* ── Article Content ── */
-        .article-section {
-            max-width: 800px;
-            margin: -30px auto 0;
-            padding: 0 24px 60px;
-            position: relative;
-            z-index: 10;
-        }
-        .article-card {
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 4px 24px rgba(0,0,0,0.06);
-            overflow: hidden;
-        }
-        .article-card .article-body {
-            padding: 40px;
-        }
-        .article-card .article-content {
-            font-size: 1.05rem;
-            line-height: 1.85;
-            color: #374151;
-        }
-        .article-card .article-content p {
-            margin-bottom: 1.2em;
-        }
-        .article-card .article-content h2 {
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin-top: 2em;
-            margin-bottom: 0.6em;
-            color: #111827;
-        }
-        .article-card .article-content h3 {
-            font-size: 1.25rem;
-            font-weight: 600;
-            margin-top: 1.5em;
-            margin-bottom: 0.5em;
-            color: #111827;
-        }
-        .article-card .article-content ul,
-        .article-card .article-content ol {
-            margin-bottom: 1.2em;
-            padding-left: 1.5em;
-        }
-        .article-card .article-content li {
-            margin-bottom: 0.4em;
-        }
-        .article-card .article-content blockquote {
-            border-left: 4px solid #16a34a;
-            padding: 12px 20px;
-            margin: 1.5em 0;
-            background: #f0fdf4;
-            border-radius: 0 8px 8px 0;
-            color: #166534;
-            font-style: italic;
-        }
-        .article-card .article-content a {
-            color: #16a34a;
-            text-decoration: underline;
-            text-underline-offset: 2px;
-        }
-        .article-card .article-content a:hover { color: #15803d; }
-        .article-card .article-content img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 12px;
-            margin: 1.5em auto;
-            display: block;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
-        }
-        .article-card .article-content pre {
-            background: #1f2937;
-            color: #e5e7eb;
-            padding: 16px 20px;
-            border-radius: 12px;
-            overflow-x: auto;
-            margin: 1.5em 0;
-            font-size: 0.9rem;
-        }
-        .article-card .article-content code {
-            background: #f3f4f6;
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-size: 0.9em;
-        }
-        .article-card .article-content pre code {
-            background: none;
-            padding: 0;
-        }
-        .article-card .article-content hr {
-            border: none;
-            border-top: 1px solid #e5e7eb;
-            margin: 2em 0;
-        }
-
-        /* ── Article Hero Image ── */
-        .article-hero-img {
-            width: 100%;
-            max-height: 450px;
-            object-fit: cover;
-            background: #f3f4f6;
-        }
-        .article-hero-placeholder {
-            width: 100%;
-            height: 250px;
-            background: linear-gradient(135deg, #e0f2e9, #d1fae5);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #16a34a;
-            font-size: 3rem;
-            font-weight: 700;
-        }
-
-        /* ── Article Footer Info ── */
-        .article-footer-info {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 16px;
-            padding: 20px 40px;
-            border-top: 1px solid #f3f4f6;
-            background: #fafafa;
-        }
-        .article-footer-info .author-info {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        .article-footer-info .author-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #16a34a, #15803d);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: 700;
-            font-size: 0.9rem;
-        }
-        .article-footer-info .author-details {
-            display: flex;
-            flex-direction: column;
-        }
-        .article-footer-info .author-name {
-            font-weight: 600;
-            font-size: 0.9rem;
-            color: #111827;
-        }
-        .article-footer-info .author-label {
-            font-size: 0.8rem;
-            color: #9ca3af;
-        }
-        .article-footer-info .share-buttons {
-            display: flex;
-            gap: 8px;
-        }
-        .article-footer-info .share-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 8px 16px;
-            border-radius: 8px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            text-decoration: none;
-            transition: all .2s;
-            border: 1px solid #e5e7eb;
-            color: #4b5563;
-            background: white;
-        }
-        .article-footer-info .share-btn:hover {
-            border-color: #16a34a;
-            color: #16a34a;
-            background: #f0fdf4;
-        }
-
-        /* ── Related Articles ── */
-        .related-section {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 24px 80px;
-        }
-        .related-header {
-            text-align: center;
-            margin-bottom: 40px;
-        }
-        .related-header .section-label {
-            display: inline-block;
-            padding: 4px 14px;
-            background: rgba(22,163,74,0.1);
-            border-radius: 50px;
-            color: #16a34a;
-            font-size: 0.8rem;
-            font-weight: 600;
-            margin-bottom: 12px;
-        }
-        .related-header h2 {
-            font-size: clamp(1.5rem, 3vw, 2rem);
-            font-weight: 800;
-            color: #111827;
-            letter-spacing: -0.5px;
-        }
-
-        .berita-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-            gap: 28px;
-        }
-        .berita-card {
-            background: white;
-            border-radius: 16px;
-            overflow: hidden;
-            border: 1px solid rgba(22,163,74,0.08);
-            transition: all .3s;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
-        }
-        .berita-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 12px 40px rgba(22,163,74,0.12);
-            border-color: rgba(22,163,74,0.2);
-        }
-        .berita-img {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-            background: #f3f4f6;
-        }
-        .berita-img-placeholder {
-            width: 100%;
-            height: 200px;
-            background: linear-gradient(135deg, #e0f2e9, #d1fae5);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #16a34a;
-            font-size: 2.5rem;
-            font-weight: 700;
-        }
-        .berita-body {
-            padding: 20px 24px 24px;
-        }
-        .berita-date {
-            font-size: 0.8rem;
-            color: #9ca3af;
-            font-weight: 500;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            margin-bottom: 8px;
-        }
-        .berita-title {
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: #111827;
-            line-height: 1.4;
-            margin-bottom: 8px;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-        .berita-card:hover .berita-title { color: #16a34a; }
-        .berita-summary {
-            font-size: 0.88rem;
-            color: #6b7280;
-            line-height: 1.6;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-        .berita-footer {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 16px 24px;
-            border-top: 1px solid #f3f4f6;
-        }
-        .berita-readmore {
-            color: #16a34a;
-            font-weight: 600;
-            font-size: 0.88rem;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            transition: gap .2s;
-        }
-        .berita-readmore:hover { gap: 8px; }
-
-
-
-        /* ── Responsive ── */
-        @media (max-width: 768px) {
-            .berita-grid { grid-template-columns: 1fr; }
-            .article-card .article-body { padding: 24px; }
-            .article-footer-info { padding: 16px 24px; flex-direction: column; align-items: flex-start; }
-            .footer-inner { grid-template-columns: 1fr 1fr; }
-        }
-
-        @media (max-width: 480px) {
-            .footer-inner { grid-template-columns: 1fr; }
-        }
-    </style>
-    @endpush
-
-    <x-public.navbar />
 
     <!-- ════════════════════════════════════════════ -->
     <!-- PAGE HEADER -->
     <!-- ════════════════════════════════════════════ -->
-    <section class="page-header">
-        <div class="page-header-inner" style="padding:0 24px;">
-            <a href="{{ url()->previous() === url()->current() ? url('/berita') : url()->previous() }}" class="back-link">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+    <section class="relative overflow-hidden bg-gradient-to-br from-emerald-900 via-emerald-700 to-emerald-500 px-6 pb-10 pt-[120px] [&>*]:relative [&>*]:z-[1] before:absolute before:inset-0 before:bg-[radial-gradient(circle,rgba(255,255,255,0.08)_1px,transparent_1px)] before:bg-[size:24px_24px] before:opacity-50">
+        <div class="mx-auto max-w-[800px] px-6">
+            <a href="{{ url()->previous() === url()->current() ? url('/berita') : url()->previous() }}"
+                class="mb-5 inline-flex items-center gap-1.5 text-sm text-white/80 no-underline transition-colors hover:text-white">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12" /><polyline points="12 19 5 12 12 5" /></svg>
                 Kembali
             </a>
 
-            <div class="article-meta">
-                <span>
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            <div class="mb-4 flex flex-wrap items-center gap-4">
+                <span class="inline-flex items-center gap-1.5 text-[0.85rem] text-white/75">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2" /><line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" /><line x1="3" y1="10" x2="21" y2="10" /></svg>
                     {{ $article->published_at ? $article->published_at->format('d F Y') : '-' }}
                 </span>
-                <span>
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                <span class="inline-flex items-center gap-1.5 text-[0.85rem] text-white/75">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" /></svg>
                     {{ $article->author->name ?? 'Admin' }}
                 </span>
             </div>
 
-            <h1 class="animate-fade-up">{{ $article->title }}</h1>
+            <h1 class="mb-0 text-[clamp(1.75rem,4vw,2.5rem)] font-extrabold leading-[1.2] tracking-[-0.5px] text-white">{{ $article->title }}</h1>
         </div>
     </section>
 
     <!-- ════════════════════════════════════════════ -->
     <!-- ARTICLE CONTENT -->
     <!-- ════════════════════════════════════════════ -->
-    <section class="article-section">
-        <article class="article-card animate-fade-up animate-delay-1">
+    <section class="relative z-10 mx-auto -mt-[30px] max-w-[800px] px-6 pb-[60px]">
+        <article class="overflow-hidden rounded-[20px] bg-white shadow-[0_4px_24px_rgba(0,0,0,0.06)]">
             @if($article->image)
-                <img src="{{ asset('storage/' . $article->image) }}" alt="{{ $article->title }}" class="article-hero-img">
+                <img src="{{ asset('storage/' . $article->image) }}" alt="{{ $article->title }}" class="max-h-[450px] w-full bg-gray-100 object-cover">
             @endif
 
-            <div class="article-body">
+            <div class="p-6 md:p-10">
 
-                <div class="article-content">
+                <div class="text-[1.05rem] leading-[1.85] text-gray-700 [&_p]:mb-[1.2em] [&_h2]:mt-[2em] [&_h2]:mb-[0.6em] [&_h2]:text-[1.5rem] [&_h2]:font-bold [&_h2]:text-gray-900 [&_h3]:mt-[1.5em] [&_h3]:mb-[0.5em] [&_h3]:text-[1.25rem] [&_h3]:font-semibold [&_h3]:text-gray-900 [&_ul]:mb-[1.2em] [&_ul]:list-disc [&_ul]:pl-[1.5em] [&_ol]:mb-[1.2em] [&_ol]:list-decimal [&_ol]:pl-[1.5em] [&_li]:mb-[0.4em] [&_blockquote]:my-[1.5em] [&_blockquote]:rounded-r-lg [&_blockquote]:border-l-4 [&_blockquote]:border-emerald-600 [&_blockquote]:bg-green-50 [&_blockquote]:px-5 [&_blockquote]:py-3 [&_blockquote]:italic [&_blockquote]:text-green-800 [&_a]:text-emerald-600 [&_a]:underline [&_a]:underline-offset-2 [&_img]:mx-auto [&_img]:my-[1.5em] [&_img]:block [&_img]:h-auto [&_img]:max-w-full [&_img]:rounded-xl [&_img]:shadow-[0_2px_12px_rgba(0,0,0,0.08)] [&_pre]:my-[1.5em] [&_pre]:overflow-x-auto [&_pre]:rounded-xl [&_pre]:bg-gray-800 [&_pre]:px-5 [&_pre]:py-4 [&_pre]:text-[0.9rem] [&_pre]:text-gray-200 [&_code]:rounded [&_code]:bg-gray-100 [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:text-[0.9em] [&_pre_code]:bg-transparent [&_pre_code]:p-0 [&_hr]:my-[2em] [&_hr]:border-t [&_hr]:border-gray-200">
                     {!! $article->content !!}
                 </div>
             </div>
 
-            <div class="article-footer-info">
-                <div class="author-info">
-                    <div class="author-avatar">
+            <div class="flex flex-col flex-wrap items-start gap-4 border-t border-gray-100 bg-gray-50 px-6 py-4 md:flex-row md:items-center md:justify-between md:px-10 md:py-5">
+                <div class="flex items-center gap-3">
+                    <div class="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-emerald-600 to-green-700 text-sm font-bold text-white">
                         {{ strtoupper(substr($article->author->name ?? 'A', 0, 1)) }}
                     </div>
-                    <div class="author-details">
-                        <span class="author-name">{{ $article->author->name ?? 'Admin' }}</span>
-                        <span class="author-label">Penulis</span>
+                    <div class="flex flex-col">
+                        <span class="text-[0.9rem] font-semibold text-gray-900">{{ $article->author->name ?? 'Admin' }}</span>
+                        <span class="text-[0.8rem] text-gray-400">Penulis</span>
                     </div>
                 </div>
 
-                <div class="share-buttons">
-                    <a href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode(url()->current()) }}" target="_blank" rel="noopener" class="share-btn" title="Bagikan ke Facebook">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                <div class="flex gap-2">
+                    <a href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode(url()->current()) }}" target="_blank" rel="noopener" class="inline-flex items-center gap-1.5 rounded-lg border border-gray-200 bg-white px-4 py-2 text-[0.8rem] font-semibold text-gray-600 no-underline transition-all hover:border-emerald-600 hover:bg-green-50 hover:text-emerald-600" title="Bagikan ke Facebook">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" /></svg>
                         Facebook
                     </a>
-                    <a href="https://wa.me/?text={{ urlencode($article->title . ' - ' . url()->current()) }}" target="_blank" rel="noopener" class="share-btn" title="Bagikan ke WhatsApp">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                    <a href="https://wa.me/?text={{ urlencode($article->title . ' - ' . url()->current()) }}" target="_blank" rel="noopener" class="inline-flex items-center gap-1.5 rounded-lg border border-gray-200 bg-white px-4 py-2 text-[0.8rem] font-semibold text-gray-600 no-underline transition-all hover:border-emerald-600 hover:bg-green-50 hover:text-emerald-600" title="Bagikan ke WhatsApp">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" /></svg>
                         WhatsApp
                     </a>
                 </div>
@@ -435,35 +71,35 @@
     <!-- RELATED ARTICLES -->
     <!-- ════════════════════════════════════════════ -->
     @if($this->relatedArticles->isNotEmpty())
-        <section class="related-section">
-            <div class="related-header">
-                <div class="section-label">Artikel Terkait</div>
-                <h2>Berita Lainnya</h2>
+        <section class="mx-auto max-w-[1200px] px-6 pb-20">
+            <div class="mb-10 text-center">
+                <div class="mb-3 inline-block rounded-full bg-emerald-600/10 px-3.5 py-1 text-[0.8rem] font-semibold text-emerald-600">Artikel Terkait</div>
+                <h2 class="text-[clamp(1.5rem,3vw,2rem)] font-extrabold tracking-[-0.5px] text-gray-900">Berita Lainnya</h2>
             </div>
 
-            <div class="berita-grid">
+            <div class="grid grid-cols-1 gap-7 md:grid-cols-[repeat(auto-fill,minmax(340px,1fr))]">
                 @foreach($this->relatedArticles as $related)
-                    <article class="berita-card animate-fade-up">
-                        <a href="{{ route('berita.detail', $related->slug) }}" style="text-decoration:none;color:inherit;" wire:navigate>
+                    <article class="group overflow-hidden rounded-2xl border border-emerald-500/10 bg-white shadow-[0_1px_3px_rgba(0,0,0,0.04)] transition-all duration-300 hover:-translate-y-1 hover:border-emerald-500/20 hover:shadow-[0_12px_40px_rgba(22,163,74,0.12)]">
+                        <a href="{{ route('berita.detail', $related->slug) }}" class="block no-underline" wire:navigate>
                             @if($related->image)
-                                <img src="{{ asset('storage/' . $related->image) }}" alt="{{ $related->title }}" class="berita-img" loading="lazy">
+                                <img src="{{ asset('storage/' . $related->image) }}" alt="{{ $related->title }}" class="h-[200px] w-full bg-gray-100 object-cover" loading="lazy">
                             @else
-                                <div class="berita-img-placeholder">B</div>
+                                <div class="flex h-[200px] w-full items-center justify-center bg-gradient-to-br from-emerald-100 to-green-100 text-4xl font-bold text-emerald-600">B</div>
                             @endif
-                            <div class="berita-body">
-                                <div class="berita-date">
-                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                            <div class="px-6 pb-6 pt-5">
+                                <div class="mb-2 flex items-center gap-1.5 text-[0.8rem] font-medium text-gray-400">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2" /><line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" /><line x1="3" y1="10" x2="21" y2="10" /></svg>
                                     {{ $related->published_at ? $related->published_at->format('d M Y') : '-' }}
                                 </div>
-                                <h3 class="berita-title">{{ $related->title }}</h3>
-                                <p class="berita-summary">{{ $related->summary ?? Str::limit(strip_tags($related->content), 120) }}</p>
+                                <h3 class="mb-2 line-clamp-2 text-[1.1rem] font-bold leading-snug text-gray-900 transition-colors group-hover:text-emerald-600">{{ $related->title }}</h3>
+                                <p class="line-clamp-2 text-[0.88rem] leading-relaxed text-gray-500">{{ $related->summary ?? Str::limit(strip_tags($related->content), 120) }}</p>
                             </div>
                         </a>
-                        <div class="berita-footer">
-                            <span style="font-size:0.8rem;color:#9ca3af;">{{ $related->author->name ?? 'Admin' }}</span>
-                            <a href="{{ route('berita.detail', $related->slug) }}" class="berita-readmore" wire:navigate>
+                        <div class="flex items-center justify-between border-t border-gray-100 px-6 py-4">
+                            <span class="text-[0.8rem] text-gray-400">{{ $related->author->name ?? 'Admin' }}</span>
+                            <a href="{{ route('berita.detail', $related->slug) }}" class="inline-flex items-center gap-1 text-[0.88rem] font-semibold text-emerald-600 no-underline transition-all hover:gap-2" wire:navigate>
                                 Baca Selengkapnya
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" /></svg>
                             </a>
                         </div>
                     </article>
@@ -472,11 +108,4 @@
         </section>
     @endif
 
-    <x-public.footer />
-
-    @push('scripts')
-    <script>
-        // Page-specific scripts here
-    </script>
-    @endpush
 </div>

@@ -30,9 +30,9 @@
 
     {{-- Open Graph --}}
     <meta property="og:title" content="{{ $ogTitle }}">
-    @filled($ogDescription)
+    @if (filled($ogDescription))
         <meta property="og:description" content="{{ $ogDescription }}">
-    @endfilled
+    @endif
     <meta property="og:image" content="{{ $ogImage }}">
     <meta property="og:url" content="{{ $canonicalUrl }}">
     <meta property="og:type" content="{{ $ogType }}">
@@ -42,9 +42,9 @@
     {{-- Twitter Card --}}
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="{{ $ogTitle }}">
-    @filled($ogDescription)
+    @if (filled($ogDescription))
         <meta name="twitter:description" content="{{ $ogDescription }}">
-    @endfilled
+    @endif
     <meta name="twitter:image" content="{{ $ogImage }}">
 
     {{-- Google Search Console --}}
@@ -105,11 +105,34 @@
     </script>
 </head>
 <body>
-    {{ $slot }}
+    {{-- Navbar & footer PERSISTEN: x-persist → tidak pernah dibuat ulang saat wire:navigate --}}
+    <x-public.navbar />
+
+    <div class="page-shell">
+        {{ $slot }}
+    </div>
+
+    <x-public.footer />
 
     <x-whatsapp-float />
 
     @livewireScripts
+
+    {{-- Smooth SPA transition: fade-in halaman baru setelah wire:navigate --}}
+    <script data-navigate-once>
+        let navigating = false;
+        document.addEventListener('livewire:navigating', () => { navigating = true; });
+        document.addEventListener('livewire:navigated', () => {
+            if (!navigating) return; // skip first load — no fade on initial render
+            navigating = false;
+            const shell = document.querySelector('.page-shell');
+            if (!shell) return;
+            shell.classList.remove('page-fade-in');
+            void shell.offsetWidth; // restart animation
+            shell.classList.add('page-fade-in');
+        });
+    </script>
+
     @stack('scripts')
 </body>
 </html>

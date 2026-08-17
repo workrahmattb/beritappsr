@@ -3,12 +3,13 @@
 namespace App\Filament\Resources\Articles\Schemas;
 
 use App\Models\Article;
+use App\Services\ContentSanitizer;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
-use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
@@ -43,15 +44,15 @@ class ArticleForm
                             ->placeholder('otomatis-dari-judul')
                             ->required()
                             ->maxLength(255)
-                    ->unique(Article::class, 'slug', ignoreRecord: true)
-                    ->helperText('URL slug, otomatis dibuat dari judul'),
+                            ->unique(Article::class, 'slug', ignoreRecord: true)
+                            ->helperText('URL slug, otomatis dibuat dari judul'),
 
                         Select::make('status')
                             ->label('Status')
                             ->options([
-                                'draft'     => 'Draft',
+                                'draft' => 'Draft',
                                 'published' => 'Published',
-                                'archived'  => 'Archived',
+                                'archived' => 'Archived',
                             ])
                             ->default('draft')
                             ->native(false)
@@ -108,6 +109,7 @@ class ArticleForm
                             ->fileAttachmentsDisk('public')
                             ->required()
                             ->placeholder('Mulai menulis berita...')
+                            ->dehydrateStateUsing(fn (?string $state): string => app(ContentSanitizer::class)->sanitize($state ?? ''))
                             ->toolbarButtons([
                                 'bold', 'italic', 'underline', 'strike',
                                 'blockquote', 'codeBlock',

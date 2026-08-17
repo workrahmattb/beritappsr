@@ -673,9 +673,15 @@ Class "Illuminate\Database\Eloquent\Collection" not loaded before unserialize()
 - `app/Livewire/KontakPage.php`
 - `app/Livewire/TentangPage.php`
 
-**Jika ingin caching diaktifkan di masa depan:**
-1. Ganti `CACHE_STORE=database` → `CACHE_STORE=file` di `.env` (lebih stabil untuk serialisasi PHP objects)
-2. Atau cache data sebagai **array** (`->toArray()`) bukan Eloquent models langsung
+**✅ CACHE_STORE sekarang = `file` (12 Juni 2026)**
+- `.env`: `CACHE_STORE=database` → `CACHE_STORE=file`
+- `.env.example`: ikut diupdate
+
+**Jika ingin caching Eloquent models di masa depan:**
+- Cache data sebagai **array** (`->toArray()`) bukan Eloquent models langsung
+- Atau set `'serializable_classes' => true` di `config/cache.php` (risiko keamanan)
+
+**Catatan:** InstagramService sudah aman karena caching data sebagai array (bukan Eloquent models)
 
 ---
 
@@ -715,4 +721,272 @@ Class "Illuminate\Database\Eloquent\Collection" not loaded before unserialize()
 
 ---
 
-*Terakhir diperbarui: 11 Juni 2026*
+## 🛡️ Fix XSS — Sanitasi Konten Filament ArticleResource (17 Agustus 2026)
+
+**Masalah:** `ContentSanitizer` (HTML Purifier) hanya dipakai oleh `ArticleService` (Livewire AdminBerita lama). Resource Filament `ArticleResource` (`/admin/articles`) menyimpan konten RichEditor **mentah tanpa sanitasi**, lalu dirender `{!! $article->content !!}` di `detail-berita.blade.php` → celah stored XSS.
+
+**Solusi:** Tambah `dehydrateStateUsing` pada field `content` di `ArticleForm.php`:
+
+```php
+RichEditor::make('content')
+    ->dehydrateStateUsing(fn (?string $state): string => app(ContentSanitizer::class)->sanitize($state ?? ''))
+```
+
+**Kenapa ini benar (urutan dehydrate Filament v5):**
+1. `RichEditorStateCast::get()` dipanggil lebih dulu di `getStateToDehydrate()` → mengubah state JSON TipTap (`{"type":"doc",...}`) menjadi **string HTML**
+2. **Baru** `dehydrateStateUsing` dievaluasi dengan `state` berupa HTML → sanitizer menerima HTML, bukan JSON
+
+**Yang disanitasi (sesuai `config/purifier.php`):**
+- ❌ Dihapus: `<script>`, `<iframe>`, `<embed>`, `<object>`, `<form>`, event handler (`onerror`, `onclick`, dll)
+- ✅ Dipertahankan: p, br, strong, em, u, s, h1-h6, ul, ol, li, blockquote, pre, code, hr, a, img, span, div, table
+- ✅ Link otomatis dapat `rel="noopener noreferrer"` (karena `HTML.TargetBlank=true`)
+
+**File diubah:**
+- `app/Filament/Resources/Articles/Schemas/ArticleForm.php` — ✅ `dehydrateStateUsing` + import `ContentSanitizer`
+- `tests/Feature/ContentSanitizerTest.php` — ✅ Baru, 5 test unit sanitasi
+
+**Catatan:** Test memakai `Tests\TestCase` (bukan `PHPUnit\Framework\TestCase`) karena `\Purifier` facade butuh aplikasi Laravel ter-boot. Letakkan di `tests/Feature/`.
+
+---
+
+### 🐛 Fix SEO — Meta & OG Description DetailBerita (17 Agustus 2026)
+
+**Masalah di `app/Livewire/DetailBerita.php`:**
+- `metaDescription` diisi `$article->title` (judul), bukan ringkasan artikel
+- `ogDescription` diisi string kosong `''` → `@filled('')` = false di `blank.blade.php` → tag **og:description & twitter:description tidak dirender sama sekali**
+
+**Solusi:** Method baru `resolveMetaDescription(Article $article)` dengan prioritas:
+1. `meta_description` (SEO dari admin) → 160 char
+2. `summary` (ringkasan artikel) → 160 char
+3. `content` (strip tags) → 160 char
+4. Judul artikel (fallback terakhir)
+
+`ogDescription` sekarang memakai nilai yang sama dengan `metaDescription` → tag OG/Twitter description kembali dirender.
+
+**File diubah:**
+- `app/Livewire/DetailBerita.php` — method `resolveMetaDescription()` + update layout data
+- `tests/Feature/DetailBeritaMetaDescriptionTest.php` — ✅ Baru, 5 test (summary, truncate 160, fallback content, prefer SEO, fallback title)
+
+---
+
+### 🧹 Bersihkan Duplikasi Admin Berita — Pakai Filament Saja (17 Agustus 2026)
+
+**Masalah:** Ada 2 UI kelola berita: Livewire `AdminBerita` (`/admin/berita`) dan Filament `ArticleResource` (`/admin/articles`). Duplikasi membingungkan & bikin 2 jalur logic berbeda.
+
+**Solusi:** Hapus UI Livewire lama, pertahankan Filament.
+
+**File dihapus:**
+- `app/Livewire/Admin/AdminBerita.php` + direktori `app/Livewire/Admin/` — Livewire component lama
+- `resources/views/admin/berita.blade.php` + direktori `resources/views/admin/`
+- `resources/views/livewire/admin/berita.blade.php` + direktori `resources/views/livewire/admin/`
+
+**File diubah:**
+- `routes/web.php` — hapus `Route::view('admin/berita', ...)` + unused import `AdminBerita`
+- `resources/views/layouts/app/header.blade.php` — link "Artikel Berita" → `route('filament.admin.resources.articles.index')` (tanpa `wire:navigate` karena Filament panel terpisah)
+- `resources/views/layouts/app/sidebar.blade.php` — sama
+
+**Catatan:** `ArticleService` **tetap dipertahankan** karena masih dipakai `app:publish-scheduled-articles` command. `ContentSanitizer` tetap dipakai `ArticleService` + `ArticleForm`.
+
+---
+
+### 🔄 Smooth Scroll Anchor — Vanilla JS ke Alpine (17 Agustus 2026)
+
+**File:** `resources/views/livewire/home-page.blade.php`
+
+**Masalah:** Smooth scroll untuk anchor `#berita` (hero button & CTA "Jelajahi Berita") pakai vanilla JS di `@push('scripts')` yang **tidak SPA-safe** — tidak jalan ulang setelah `wire:navigate` (pola yang sama seperti navbar & hero carousel yang sudah dikonversi).
+
+**Solusi:** Konversi ke Alpine.js di root div:
+- `x-data` dengan method `smoothScrollTo(event)`
+- Event delegation via `@click="smoothScrollTo"` — cek `event.target.closest('a[href^="#"]')`, scroll ke target jika ada
+- Hapus blok `@push('scripts')` vanilla JS sepenuhnya
+
+**Kenapa event delegation:** Handler di root div menangkap semua klik `a[href^="#"]` dalam satu tempat — SPA-safe karena Alpine re-init setiap render, dan tidak perlu bind per-anchor.
+
+**File diubah:**
+- `resources/views/livewire/home-page.blade.php` — ✅ Alpine `x-data` + `@click`, hapus vanilla JS
+- `tests/Feature/HomePageRenderTest.php` — ✅ Baru, verifikasi halaman render + Alpine hadir + vanilla JS hilang
+
+---
+
+### 🧹 Cleanup `@push('scripts')` Kosong di Semua Halaman (17 Agustus 2026)
+
+**Masalah:** Setelah konversi navbar/hero/smooth-scroll ke Alpine, 6 halaman masih menyisakan blok `@push('scripts')` yang **kosong** (hanya komentar placeholder "Page-specific scripts here") — tidak ada vanilla JS yang benar-benar berfungsi.
+
+**Solusi:** Hapus semua blok kosong tersebut:
+- `resources/views/livewire/all-berita.blade.php`
+- `resources/views/livewire/daftar-pengajar.blade.php`
+- `resources/views/livewire/detail-berita.blade.php`
+- `resources/views/livewire/fasilitas-sekolah.blade.php`
+- `resources/views/livewire/kontak-page.blade.php`
+- `resources/views/livewire/tentang-page.blade.php`
+
+**Hasil:** Seluruh `resources/views` kini **bebas vanilla JS** — tidak ada `@push('scripts')`, `addEventListener`, `querySelectorAll`, `getElementById`, atau `onclick=` inline. Semua interaktivitas ditangani Alpine (`x-data`) atau Livewire (`wire:navigate`, `wire:click`).
+
+**Catatan:** Satu-satunya inline handler tersisa adalah `onerror="this.parentElement.classList.add('img-error')"` di home-page (fallback gambar Instagram) — itu aman karena di-render ulang server-side tiap Livewire render, jadi SPA-safe.
+
+**File diubah:** 6 blade dihapus blok kosongnya + `tests/Feature/PublicPagesRenderTest.php` (baru, 2 test: semua halaman render OK + tidak ada `@push('scripts')` tersisa).
+
+---
+
+### 🐛 Fix: SyntaxError Alpine bikin SPA Navigate Gagal di Home (17 Agustus 2026)
+
+**Gejala:** Navbar masih full reload meskipun semua link sudah `wire:navigate`.
+
+**Diagnosis (via Chrome CDP headless):**
+- `x-data` smoothScrollTo versi awal memakai selector `'a[href^=\"#\"]'` — mengandung `\"` di dalam atribut HTML yang dibatasi `"`, sehingga **memecah parsing atribut** → `SyntaxError: Invalid or unexpected token` di Alpine `safeAsyncFunction`
+- Akibatnya Alpine gagal compile ekspresi di home page → `x-navigate` (plugin Alpine yang dipakai Livewire 4 untuk SPA) tidak ter-bind → **full reload**
+
+**Solusi:** Hindari quote ganda di dalam `x-data`. Logika di-refactor: cek `anchor.getAttribute('href')` lalu `href.startsWith('#')` — tanpa selector string yang mengandung `"`:
+```html
+const anchor = event.target.closest('a');
+if (!anchor) return;
+const href = anchor.getAttribute('href') ?? '';
+if (!href.startsWith('#')) return;
+```
+
+**Verifikasi browser (Chrome headless, viewport 1280x800):**
+- ✅ JS errors di home: `[]` — SyntaxError hilang
+- ✅ Alpine x-data processed: 4 — ekspresi ter-compile benar
+- ✅ SPA navigate JALAN: event `alpine:navigate` + `livewire:navigate` fire, request `/berita` dengan header `X-LiveWire-Navigate`
+
+**Pelajaran penting:**
+- Livewire 4 menerjemahkan `wire:navigate` → `x-navigate` (Alpine plugin). Error JS apapun di halaman bisa memblokir SPA navigation.
+- Jangan pernah taruh `"` (atau `\"`) di dalam atribut HTML yang dibatasi `"` — pakai single quote di dalamnya.
+- Di Livewire 4, `Alpine.navigate()` tersedia, tapi saat `window.livewireScriptConfig` ter-set, `Livewire.start()` tidak otomatis dipanggil (harus dari app.js).
+
+---
+
+### 🎨 Konsolidasi CSS Per-Halaman → Global (17 Agustus 2026) — Fix Geter SPA Navigate
+
+**Gejala:** Navbar SPA sudah jalan (tanpa reload) tapi perpindahan antar link **geter/jittery**.
+
+**Diagnosis (via Chrome CDP + diff hash style tag):**
+- Setiap halaman push `<style>` per-halaman via `@push('styles')` — total 11 blok / 2.251 baris CSS
+- Livewire SPA **memindahkan `<style>` ke `<body>`** dan **men-swap blok per-halaman tiap navigasi**: home → /berita = −13.241 bytes +3.419 bytes CSS di-swap di tengah navigasi
+- Browser harus re-parse & re-apply CSS → reflow seluruh layout → geter
+
+**Solusi: Konsolidasi semua CSS ke `resources/css/public.css` (di-import Vite):**
+1. Navbar / footer / whatsapp-float → **global unscoped** (identik di semua halaman)
+2. CSS per-halaman → **di-scope di bawah class root unik** (`.page-home`, `.page-berita`, `.page-pengajar`, `.page-detail-*`, `.page-fasilitas`, `.page-kontak`, `.page-tentang`)
+3. Setiap blade diberi class root (`<div class="page-xxx">`)
+4. Semua blok `@push('styles')` / `<style>` inline **dihapus** dari 11 file
+
+**Kenapa harus di-scope (bukan digabung polos):** Ada selector konflik antar halaman — `.carousel-dots` (home bottom:40px vs fasilitas bottom:10px), `.page-header h1`, `.section`, `.empty-state` (padding 60px vs 80px), `.teacher-grid`, `.facility-card` — menggabung polos akan merusak salah satu halaman. Scoping menyelesaikan konflik: `.page-pengajar .empty-state` = 60px, `.page-fasilitas .empty-state` = 80px (terverifikasi di browser).
+
+**Parser CSS custom** (`scope_css`) menangani: selector multi-baris, rule satu-baris (`sel { props }`), `@media` nesting, komentar, dan `body { background }` di home → `.page-home`.
+
+**Verifikasi:**
+- ✅ **Style swap hilang total**: 6 style tags (27KB, 13KB di-swap) → 2 tags Livewire (3.2KB, **0 bytes di-swap**)
+- ✅ **338 rule ter-preserve 100%** (9 halaman, cocok 1:1)
+- ✅ Konflik `.empty-state` terselesaikan benar di browser
+- ✅ Semua halaman render OK, 0 JS errors, build sukses, test lulus
+
+**Bonus:** CSS sekarang satu file ter-cache (gzip 38KB) → first paint juga lebih cepat.
+
+---
+
+### 🚫 Hilangkan "Pop Up" Navigasi SPA (17 Agustus 2026)
+
+**Keluhan user:** navigasi SPA masih ada "kejutan / pop up" — bar biru di atas layar + kartu yang muncul-muncul tiap pindah halaman.
+
+**Penyebab:**
+1. **Progress bar Livewire (nprogress)** — `config/livewire.php` (belum di-publish) default `show_progress_bar => true` dengan warna biru `#2299dd` → bar biru pop up di atas layar setiap `wire:navigate`
+2. **Animasi `animate-fade-up` / `animate-delay-N`** (32 kemunculan di 8 halaman) — re-trigger setiap SPA navigate → elemen slide-up 30px = "pop up pop up"
+
+**Perbaikan:**
+1. **Publish & edit `config/livewire.php`**: `'navigate' => ['show_progress_bar' => false, 'progress_bar_color' => '#10b981']` → Livewire render `data-no-progress-bar`, bar hilang total
+2. **`blank.blade.php`**: tambah wrapper `<div class="page-shell">` + script `data-navigate-once` yang dengar `livewire:navigating`/`livewire:navigated` → halaman baru **fade-in halus (280ms)**. Guard `navigating` flag supaya first load TIDAK fade (hindari flash)
+3. **Hapus semua `animate-fade-up`/`animate-delay-N`** (32 kemunculan + 1 dinamis Blade di kontak-page) + bersihkan CSS-nya dari `app.css`
+4. **`html { scroll-behavior: smooth }`** di app.css → scroll-to-top saat navigate jadi mulus
+5. **Update `HomePageRenderTest`** — assertion lama `assertStringNotContainsString('addEventListener')` sudah basi (script transisi memang pakai addEventListener); diganti cek `page-shell` + `livewire:navigated` + pola lama `a[href^="#"]` hilang
+
+**Verifikasi browser:** progress bar `#nprogress` tidak ada di semua halaman, `.page-fade-in` terpasang setelah navigate, `fadeAnimCount: 0` (tanpa pop up), first load tanpa fade. Semua 13 test lulus.
+
+**Jawaban untuk user:**
+- **Tailwind?** — Ya, Tailwind v4 terpasang & dipakai (admin/Flux + app.css `@import 'tailwindcss'`), TAPI halaman publik dibuat dengan **CSS custom handwritten** (2.251 baris di `resources/css/public.css`), bukan utility class Tailwind. Konsolidasi ke Tailwind penuh = pekerjaan besar tersendiri.
+- **Navbar komponen?** — **Sudah**: `resources/views/components/public/navbar.blade.php`, dipakai semua halaman via `<x-public.navbar />`.
+
+---
+
+### 🎨 Konversi Penuh Halaman Publik → Tailwind Utilities (17 Agustus 2026)
+
+**Permintaan user:** Konversi penuh semua halaman publik ke utility class Tailwind (bukan CSS custom handwritten), dan hapus semua animasi pop-up yang merusak.
+
+**Yang dikonversi ke Tailwind penuh (9 halaman + 3 komponen):**
+- `components/public/navbar.blade.php` (fixed, backdrop-blur, active link underline `after:`)
+- `components/public/footer.blade.php`
+- `components/whatsapp-float.blade.php`
+- `livewire/home-page.blade.php` (hero, berita terbaru, CTA)
+- `livewire/all-berita.blade.php` + `detail-berita.blade.php`
+- `livewire/daftar-pengajar.blade.php` + `detail-teacher.blade.php`
+- `livewire/fasilitas-sekolah.blade.php` + `detail-fasilitas.blade.php` (carousel/gallery Alpine + `@js()` utk images)
+- `livewire/kontak-page.blade.php` + `tentang-page.blade.php`
+- `vendor/pagination/tailwind.blade.php` (di-publish, kotak emerald 40px)
+
+**File CSS custom dihapus total:**
+- ❌ `resources/css/public.css` (2.251 baris) — **dihapus** + import-nya dari `app.css`
+- ❌ Blok "PUBLIC SITE — SHARED STYLES" (berita-card, page-header, cta-section, dll.) dari `app.css`
+- ✅ `app.css` kini hanya: Tailwind import + Flux + base minimal (`body` font Inter/bg #f9fafb, `[x-cloak]`, `html { scroll-behavior: smooth }`, `@keyframes page-fade-in` + `.page-fade-in` — dipindah dari public.css karena dipakai `blank.blade.php` SPA transition)
+- Class root `.page-*` di blade juga dihapus (tidak perlu scoping lagi)
+
+**Pola yang dipakai:**
+- Header: `bg-gradient-to-br from-emerald-950 via-emerald-800 to-emerald-600` + `pt-[120px] pb-[50px]` + pattern `before:bg-[radial-gradient(...)]`
+- Kartu: `rounded-2xl border border-emerald-500/10 bg-white shadow-[0_1px_3px_rgba(0,0,0,0.04)] hover:-translate-y-1 hover:shadow-[0_12px_40px_rgba(22,163,74,0.12)]`
+- Alpine carousel state: `images: @js($images)` (bukan `{{ json_encode($images) }}` — `@js` escape aman di atribut `x-data` ber-quote ganda)
+- Rich content: `[&_p]:mb-4` arbitrary variants utk styling isi dari DB
+
+**Bonus fix:** `@filled(...)` di `blank.blade.php` **bukan directive Blade yang valid** → teks literal `@filled($ogDescription)` bocor ke body (browser re-parent stray head text). Diganti `@if (filled(...))`. Terverifikasi bodyText bersih.
+
+**Verifikasi:**
+- ✅ Build sukses (CSS 284.97 kB / gzip 37.83 kB — masih termasuk Flux+Filament)
+- ✅ **Pixel diff vs baseline** (screenshot Chrome headless, threshold >30 RGB): home 0.73%, berita 2.00%, fasilitas 0.72%, pengajar 3.68%, kontak 0.72%, tentang 0.73% — desain tetap sama
+- ✅ SPA navigate: URL berubah tanpa reload, style tags identik sebelum/sesudah (0 swap), `page-fade-in` aktif, 0 JS errors
+- ✅ `php artisan view:cache` OK, semua test render lulus
+- ⚠️ Test Auth (Authentication/PasswordReset/Registration/TwoFactor) gagal **419 CSRF** — **pre-existing** (terbukti gagal juga di tree bersih via `git stash`), bukan dari perubahan ini
+
+---
+
+### 🔒 Navbar & Footer PERSISTEN — Tidak Pernah Dibuat Ulang Saat SPA Navigate (17 Agustus 2026)
+
+**Permintaan user:** Buat navbar/footer benar-benar persisten — tidak pernah di-render ulang saat `wire:navigate` (sebelumnya identity DOM berubah tiap navigasi karena berada di dalam `$slot` tiap halaman).
+
+**Mekanisme resmi Livewire: `x-persist`** (di vendor `livewire.js` → `js/plugins/navigate/persist.js`, `enablePersist = true` default):
+- Sebelum swap body: elemen `[x-persist]` disimpan (`storePersistantElementsForLater`) + di-remove dari DOM
+- Setelah `document.body.replaceWith(newBody)`: elemen lama dikembalikan (`putPersistantElementsBack`) menggantikan stub baru → **identity DOM + state Alpine dipertahankan**
+
+**Perubahan:**
+1. **`blank.blade.php`**: `<x-public.navbar />` dipindah ke atas `$slot`, `<x-public.footer />` ke bawah — keduanya di luar konten halaman
+2. **`navbar.blade.php`**: tambah `x-persist="navbar"`; link aktif **tidak lagi `request()->is()`** (server-side, basi karena navbar tak pernah re-render) → **Alpine**: state `path: window.location.pathname` + listener `livewire:navigated` update path + method `isActive(prefix)` → `:class="isActive('/berita') ? 'text-emerald-600 after:scale-x-100' : 'text-gray-500'"`
+3. **`footer.blade.php`**: `x-persist="footer"`; **`whatsapp-float`**: `x-persist="whatsapp-float"` (konsisten, juga tak pernah dibuat ulang)
+4. **9 halaman publik**: hapus `<x-public.navbar />` dan `<x-public.footer />` dari blade (sekarang dari layout)
+
+**Verifikasi browser (Chrome CDP):**
+- ✅ `navSame/footerSame/waSame = true` di 5 navigasi berurutan (home → berita → fasilitas → kontak → home) — identity DOM dipertahankan 100%
+- ✅ Link aktif benar di semua halaman: `/berita`→Berita, `/fasilitas`→Fasilitas, `/tentang`→Tentang, `/kontak`→Kontak, `/profile/pengajar`→Pengajar+parent Profile, `/`→Beranda
+- ✅ Mobile menu tetap jalan (x-cloak + Alpine state dipertahankan)
+- ✅ 0 JS errors; SPA tetap tanpa reload; 15 test lulus
+- ✅ **Pixel-perfect vs state Tailwind sebelumnya: 0.00% diff** (pembuktian via backup/restore + git — hati-hati: `git stash` mengembalikan ke HEAD CSS custom lama, bukan state Tailwind; perbandingan valid harus pakai snapshot file aktual)
+
+**Pelajaran:** `x-persist` = cara resmi Livewire untuk elemen persisten lintas navigasi (state Alpine ikut dipertahankan). Link aktif di elemen persisten WAJIB dihitung client-side (Alpine + `livewire:navigated`), bukan server-side.
+
+---
+
+### 📝 README.md Profesional — Dokumentasi Lengkap Project (17 Agustus 2026)
+
+**Permintaan user:** Perbaiki `README.md` (sebelumnya hanya `# beritappsr`) jadi profesional & lengkap — alur aplikasi, framework, tools, semuanya.
+
+**Isi README baru (`README.md`, ~300 baris):**
+- Header + daftar isi (12 section)
+- Fitur utama: 9 halaman publik SPA + panel admin Filament (10 resources) + keamanan
+- Tabel teknologi: PHP ^8.3, Laravel ^13, Livewire ^4.1, Filament ^5, Fortify, Flux, mews/purifier, Tailwind v4, Alpine ^3, Vite ^8, TipTap, MySQL, Sail
+- Struktur project (pohon direktori lengkap)
+- Persiapan & instalasi (prasyarat + langkah) + menjalankan dev/prod
+- **Alur aplikasi 3 bagian**: alur publik, alur admin (ArticleService publish/schedule), alur SPA navigate (x-persist + fade-in)
+- Database & model (9 tabel utama + konvensi)
+- Keamanan (XSS/CSRF/2FA), testing (6 test), command sering dipakai, lisensi
+
+**Verifikasi akurasi:** route publik (`/`, `/berita`, `/fasilitas`, `/profile/*`, `/tentang`, `/kontak`), nama tabel (`contact_whatsapp_numbers`), versi dependency dari `composer.json`/`package.json`, dan struktur Filament (`/admin`, `Color::Amber`) — semua dicek terhadap kode aktual.
+
+---
+
+*Terakhir diperbarui: 17 Agustus 2026*

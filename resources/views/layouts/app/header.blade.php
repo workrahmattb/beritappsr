@@ -13,7 +13,7 @@
                 <flux:navbar.item icon="layout-grid" :href="route('dashboard')" :current="request()->routeIs('dashboard')" wire:navigate>
                     {{ __('Dashboard') }}
                 </flux:navbar.item>
-                <flux:navbar.item icon="document-text" :href="route('admin.berita')" :current="request()->routeIs('admin.berita')" wire:navigate>
+                <flux:navbar.item icon="document-text" :href="route('filament.admin.resources.articles.index')" :current="request()->routeIs('filament.admin.resources.articles.*')">
                     {{ __('Artikel Berita') }}
                 </flux:navbar.item>
             </flux:navbar>
@@ -59,7 +59,7 @@
                     <flux:sidebar.item icon="layout-grid" :href="route('dashboard')" :current="request()->routeIs('dashboard')" wire:navigate>
                         {{ __('Dashboard')  }}
                     </flux:sidebar.item>
-                    <flux:sidebar.item icon="document-text" :href="route('admin.berita')" :current="request()->routeIs('admin.berita')" wire:navigate>
+                    <flux:sidebar.item icon="document-text" :href="route('filament.admin.resources.articles.index')" :current="request()->routeIs('filament.admin.resources.articles.*')">
                         {{ __('Artikel Berita') }}
                     </flux:sidebar.item>
                 </flux:sidebar.group>

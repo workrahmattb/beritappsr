@@ -1,315 +1,51 @@
-@push('styles')
-<style>
-    /* ── Shared Navbar ── */
-    .navbar {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        z-index: 50;
-        background: rgba(255, 255, 255, 0.95);
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
-        border-bottom: 1px solid rgba(22, 163, 74, 0.1);
-        transition: box-shadow .3s;
-    }
-
-    .navbar.scrolled {
-        box-shadow: 0 4px 24px rgba(22, 163, 74, 0.08);
-    }
-
-    .navbar-inner {
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 0 24px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        height: 72px;
-    }
-
-    .nav-logo {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        text-decoration: none;
-        font-weight: 800;
-        font-size: 1.25rem;
-        color: #16a34a;
-        letter-spacing: -0.5px;
-    }
-
-    .logo-img {
-        height: 40px;
-        width: auto;
-    }
-
-    .nav-links {
-        display: flex;
-        align-items: center;
-        gap: 32px;
-    }
-
-    .nav-links a {
-        text-decoration: none;
-        font-size: 0.88rem;
-        font-weight: 500;
-        color: #6b7280;
-        transition: color .2s;
-        position: relative;
-    }
-
-    .nav-links a::after {
-        content: '';
-        position: absolute;
-        bottom: -4px;
-        left: 0;
-        right: 0;
-        height: 2px;
-        background: #16a34a;
-        border-radius: 2px;
-        transform: scaleX(0);
-        transition: transform .2s;
-    }
-
-    .nav-links a:hover {
-        color: #16a34a;
-    }
-
-    .nav-links a:hover::after {
-        transform: scaleX(1);
-    }
-
-    .nav-links a.active {
-        color: #16a34a;
-    }
-
-    .nav-links a.active::after {
-        transform: scaleX(1);
-    }
-
-    /* ── Dropdown ── */
-    .nav-dropdown {
-        position: relative;
-    }
-
-    .nav-dropdown-trigger {
-        text-decoration: none;
-        font-size: 0.88rem;
-        font-weight: 500;
-        color: #6b7280;
-        cursor: pointer;
-        transition: color .2s;
-        display: flex;
-        align-items: center;
-        gap: 4px;
-        position: relative;
-        background: none;
-        border: none;
-        font-family: inherit;
-        padding: 0;
-    }
-
-    .nav-dropdown-trigger::after {
-        content: '';
-        position: absolute;
-        bottom: -4px;
-        left: 0;
-        right: 0;
-        height: 2px;
-        background: #16a34a;
-        border-radius: 2px;
-        transform: scaleX(0);
-        transition: transform .2s;
-    }
-
-    .nav-dropdown-trigger:hover {
-        color: #16a34a;
-    }
-
-    .nav-dropdown-trigger:hover::after {
-        transform: scaleX(1);
-    }
-
-    .nav-dropdown-trigger.active {
-        color: #16a34a;
-    }
-
-    .nav-dropdown-trigger.active::after {
-        transform: scaleX(1);
-    }
-
-    .nav-dropdown-arrow {
-        transition: transform .2s;
-    }
-
-    .nav-dropdown:hover .nav-dropdown-arrow {
-        transform: rotate(180deg);
-    }
-
-    .nav-dropdown-menu {
-        position: absolute;
-        top: 100%;
-        left: 50%;
-        transform: translateX(-50%) translateY(8px);
-        background: white;
-        border-radius: 12px;
-        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
-        border: 1px solid rgba(22, 163, 74, 0.1);
-        min-width: 200px;
-        padding: 6px;
-        opacity: 0;
-        visibility: hidden;
-        transition: all .2s;
-        z-index: 100;
-    }
-
-    .nav-dropdown:hover .nav-dropdown-menu {
-        opacity: 1;
-        visibility: visible;
-        transform: translateX(-50%) translateY(4px);
-    }
-
-    .nav-dropdown-menu a {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        padding: 10px 14px;
-        border-radius: 8px;
-        text-decoration: none;
-        font-size: 0.85rem;
-        font-weight: 500;
-        color: #4b5563;
-        transition: all .15s;
-    }
-
-    .nav-dropdown-menu a:hover {
-        background: rgba(22, 163, 74, 0.08);
-        color: #16a34a;
-    }
-
-    .nav-dropdown-menu a::after {
-        display: none;
-    }
-
-    .nav-dropdown-menu a.active {
-        background: rgba(22, 163, 74, 0.1);
-        color: #16a34a;
-    }
-
-    .mobile-sub-label {
-        font-size: 0.8rem;
-        font-weight: 600;
-        color: #9ca3af;
-        padding: 6px 0 2px 0;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-    }
-
-    .mobile-sub-item {
-        padding-left: 16px !important;
-    }
-
-    /* ── Alpine x-cloak (hide until ready) ── */
-    [x-cloak] {
-        display: none !important;
-    }
-
-    .menu-toggle {
-        display: none;
-        flex-direction: column;
-        gap: 5px;
-        cursor: pointer;
-        padding: 4px;
-        background: transparent;
-        border: none;
-    }
-
-    .menu-toggle span {
-        display: block;
-        width: 24px;
-        height: 2.5px;
-        background: #4b5563;
-        border-radius: 4px;
-        transition: all .3s;
-    }
-
-    .menu-toggle.active span:nth-child(1) {
-        transform: rotate(45deg) translate(5px, 5px);
-    }
-
-    .menu-toggle.active span:nth-child(2) {
-        opacity: 0;
-    }
-
-    .menu-toggle.active span:nth-child(3) {
-        transform: rotate(-45deg) translate(5px, -5px);
-    }
-
-    .mobile-menu {
-        display: none;
-        flex-direction: column;
-        gap: 4px;
-        padding: 0 24px 20px;
-        background: white;
-        max-width: 1200px;
-        margin: 0 auto;
-    }
-
-    .mobile-menu.open {
-        display: flex;
-    }
-
-    .mobile-menu a {
-        text-decoration: none;
-        font-size: 0.9rem;
-        font-weight: 500;
-        color: #4b5563;
-        padding: 10px 0;
-        transition: color .2s;
-    }
-
-    .mobile-menu a:hover,
-    .mobile-menu a.active {
-        color: #16a34a;
-    }
-
-    @media (max-width: 768px) {
-        .nav-links {
-            display: none;
-        }
-
-        .menu-toggle {
-            display: flex;
-        }
-    }
-</style>
-@endpush
-
-<nav class="navbar" id="navbar"
-     x-data="{ mobileOpen: false, scrolled: false }"
-     x-init="$nextTick(() => { scrolled = window.scrollY > 20 })"
+<nav id="navbar"
+     x-persist="navbar"
+     class="fixed inset-x-0 top-0 z-50 border-b border-emerald-500/10 bg-white/95 backdrop-blur-xl transition-shadow"
+     x-data="{
+         mobileOpen: false,
+         scrolled: false,
+         path: window.location.pathname,
+         init() {
+             this.scrolled = window.scrollY > 20;
+             window.addEventListener('livewire:navigated', () => {
+                 this.path = window.location.pathname;
+             });
+         },
+         isActive(prefix) {
+             if (prefix === '/') return this.path === '/';
+             return this.path === prefix || this.path.startsWith(prefix + '/');
+         }
+     }"
      @scroll.window="scrolled = window.scrollY > 20"
-     :class="{ 'scrolled': scrolled }">
-    <div class="navbar-inner">
-        <a href="/" wire:navigate class="nav-logo">
-            <img src="{{ asset('gambar/ppsr logo.webp') }}" alt="PPSR Logo" class="logo-img">
+     :class="{ 'shadow-[0_4px_24px_rgba(22,163,74,0.08)]': scrolled }">
+    <div class="mx-auto flex h-[72px] max-w-[1200px] items-center justify-between px-6">
+        <a href="/" wire:navigate class="flex items-center gap-2.5 text-xl font-extrabold tracking-tight text-emerald-600">
+            <img src="{{ asset('gambar/ppsr logo.webp') }}" alt="PPSR Logo" class="h-10 w-auto">
         </a>
 
-        <div class="nav-links">
-            <a href="/" wire:navigate class="{{ request()->is('/') ? 'active' : '' }}">Beranda</a>
+        <div class="hidden items-center gap-8 md:flex">
+            <a href="/" wire:navigate
+                class="relative text-sm font-medium no-underline transition-colors after:absolute after:-bottom-1 after:left-0 after:right-0 after:h-0.5 after:rounded-sm after:bg-emerald-600 after:scale-x-0 after:transition-transform hover:text-emerald-600 hover:after:scale-x-100"
+                :class="isActive('/') ? 'text-emerald-600 after:scale-x-100' : 'text-gray-500'">
+                Beranda
+            </a>
 
-            <div class="nav-dropdown">
-                <span class="nav-dropdown-trigger {{ request()->is('profile*') ? 'active' : '' }}">
+            <div class="group relative">
+                <span
+                    class="relative flex cursor-pointer items-center gap-1 text-sm font-medium transition-colors after:absolute after:-bottom-1 after:left-0 after:right-0 after:h-0.5 after:rounded-sm after:bg-emerald-600 after:scale-x-0 after:transition-transform group-hover:text-emerald-600 group-hover:after:scale-x-100"
+                    :class="isActive('/profile') ? 'text-emerald-600 after:scale-x-100' : 'text-gray-500'">
                     Profile
-                    <svg class="nav-dropdown-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none"
-                        stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <svg class="transition-transform group-hover:rotate-180" width="14" height="14" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                        stroke-linejoin="round">
                         <polyline points="6 9 12 15 18 9" />
                     </svg>
                 </span>
-                <div class="nav-dropdown-menu">
+                <div
+                    class="invisible absolute left-1/2 top-full z-[100] min-w-[200px] -translate-x-1/2 translate-y-2 rounded-xl border border-emerald-500/10 bg-white p-1.5 opacity-0 shadow-[0_12px_40px_rgba(0,0,0,0.12)] transition-all group-hover:visible group-hover:translate-y-1 group-hover:opacity-100">
                     <a href="{{ route('profile.pimpinan') }}" wire:navigate
-                        class="{{ request()->routeIs('profile.pimpinan') ? 'active' : '' }}">
+                        class="flex items-center gap-2.5 rounded-lg px-3.5 py-2.5 text-sm font-medium no-underline transition-all hover:bg-emerald-500/10 hover:text-emerald-600"
+                        :class="isActive('/profile/pimpinan') ? 'bg-emerald-500/10 text-emerald-600' : 'text-gray-600'">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                             stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
@@ -318,7 +54,8 @@
                         Pimpinan Pondok
                     </a>
                     <a href="{{ route('profile.pengajar') }}" wire:navigate
-                        class="{{ request()->routeIs('profile.pengajar') ? 'active' : '' }}">
+                        class="flex items-center gap-2.5 rounded-lg px-3.5 py-2.5 text-sm font-medium no-underline transition-all hover:bg-emerald-500/10 hover:text-emerald-600"
+                        :class="isActive('/profile/pengajar') ? 'bg-emerald-500/10 text-emerald-600' : 'text-gray-600'">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                             stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
@@ -332,39 +69,69 @@
             </div>
 
             <a href="{{ route('fasilitas') }}" wire:navigate
-                class="{{ request()->routeIs('fasilitas') ? 'active' : '' }}">Fasilitas</a>
+                class="relative text-sm font-medium no-underline transition-colors after:absolute after:-bottom-1 after:left-0 after:right-0 after:h-0.5 after:rounded-sm after:bg-emerald-600 after:scale-x-0 after:transition-transform hover:text-emerald-600 hover:after:scale-x-100"
+                :class="isActive('/fasilitas') ? 'text-emerald-600 after:scale-x-100' : 'text-gray-500'">
+                Fasilitas
+            </a>
 
             <a href="/berita" wire:navigate
-                class="{{ request()->is('berita*') && !request()->is('/') ? 'active' : '' }}">Berita</a>
+                class="relative text-sm font-medium no-underline transition-colors after:absolute after:-bottom-1 after:left-0 after:right-0 after:h-0.5 after:rounded-sm after:bg-emerald-600 after:scale-x-0 after:transition-transform hover:text-emerald-600 hover:after:scale-x-100"
+                :class="isActive('/berita') ? 'text-emerald-600 after:scale-x-100' : 'text-gray-500'">
+                Berita
+            </a>
 
             <a href="{{ route('tentang') }}" wire:navigate
-                class="{{ request()->routeIs('tentang') ? 'active' : '' }}">Tentang</a>
+                class="relative text-sm font-medium no-underline transition-colors after:absolute after:-bottom-1 after:left-0 after:right-0 after:h-0.5 after:rounded-sm after:bg-emerald-600 after:scale-x-0 after:transition-transform hover:text-emerald-600 hover:after:scale-x-100"
+                :class="isActive('/tentang') ? 'text-emerald-600 after:scale-x-100' : 'text-gray-500'">
+                Tentang
+            </a>
             <a href="{{ route('kontak') }}" wire:navigate
-                class="{{ request()->routeIs('kontak') ? 'active' : '' }}">Kontak</a>
+                class="relative text-sm font-medium no-underline transition-colors after:absolute after:-bottom-1 after:left-0 after:right-0 after:h-0.5 after:rounded-sm after:bg-emerald-600 after:scale-x-0 after:transition-transform hover:text-emerald-600 hover:after:scale-x-100"
+                :class="isActive('/kontak') ? 'text-emerald-600 after:scale-x-100' : 'text-gray-500'">
+                Kontak
+            </a>
             <a href="https://lws.syafaaturrasul.com" target="_blank" rel="noopener noreferrer"
-                style="background:linear-gradient(135deg,#b8860b,#daa520);color:white;padding:6px 16px;border-radius:8px;font-weight:600;">Wakaf</a>
+                class="rounded-lg bg-gradient-to-br from-yellow-700 to-yellow-500 px-4 py-1.5 font-semibold text-white">
+                Wakaf
+            </a>
         </div>
 
-        <button class="menu-toggle" :class="{ 'active': mobileOpen }" @click="mobileOpen = !mobileOpen" aria-label="Menu">
-            <span></span>
-            <span></span>
-            <span></span>
+        <button class="flex cursor-pointer flex-col gap-[5px] border-none bg-transparent p-1 md:hidden"
+            @click="mobileOpen = !mobileOpen" aria-label="Menu">
+            <span class="block h-[2.5px] w-6 rounded bg-gray-600 transition-all"
+                :class="mobileOpen && '[transform:rotate(45deg)_translate(5px,5px)]'"></span>
+            <span class="block h-[2.5px] w-6 rounded bg-gray-600 transition-all"
+                :class="mobileOpen && 'opacity-0'"></span>
+            <span class="block h-[2.5px] w-6 rounded bg-gray-600 transition-all"
+                :class="mobileOpen && '[transform:rotate(-45deg)_translate(5px,-5px)]'"></span>
         </button>
     </div>
 
-    <div class="mobile-menu" :class="{ 'open': mobileOpen }" x-cloak>
-        <a href="/" wire:navigate @click="mobileOpen = false" class="{{ request()->is('/') ? 'active' : '' }}">Beranda</a>
-        <div class="mobile-sub-label">Profile</div>
-        <a href="{{ route('profile.pimpinan') }}" wire:navigate @click="mobileOpen = false" class="mobile-sub-item">Pimpinan Pondok</a>
-        <a href="{{ route('profile.pengajar') }}" wire:navigate @click="mobileOpen = false" class="mobile-sub-item">Pengajar</a>
+    <div class="mx-auto flex max-w-[1200px] flex-col gap-1 bg-white px-6 pb-5 md:hidden" x-show="mobileOpen" x-cloak>
+        <a href="/" wire:navigate @click="mobileOpen = false"
+            class="py-2.5 text-sm font-medium no-underline transition-colors hover:text-emerald-600"
+            :class="isActive('/') ? 'text-emerald-600' : 'text-gray-600'">Beranda</a>
+        <div class="pb-0.5 pt-1.5 text-xs font-semibold uppercase tracking-wide text-gray-400">Profile</div>
+        <a href="{{ route('profile.pimpinan') }}" wire:navigate @click="mobileOpen = false"
+            class="py-2.5 pl-4 text-sm font-medium no-underline transition-colors hover:text-emerald-600"
+            :class="isActive('/profile/pimpinan') ? 'text-emerald-600' : 'text-gray-600'">Pimpinan
+            Pondok</a>
+        <a href="{{ route('profile.pengajar') }}" wire:navigate @click="mobileOpen = false"
+            class="py-2.5 pl-4 text-sm font-medium no-underline transition-colors hover:text-emerald-600"
+            :class="isActive('/profile/pengajar') ? 'text-emerald-600' : 'text-gray-600'">Pengajar</a>
         <a href="{{ route('fasilitas') }}" wire:navigate @click="mobileOpen = false"
-            class="{{ request()->routeIs('fasilitas') ? 'active' : '' }}">Fasilitas</a>
-        <a href="/berita" wire:navigate @click="mobileOpen = false" class="{{ request()->is('berita*') && !request()->is('/') ? 'active' : '' }}">Berita</a>
+            class="py-2.5 text-sm font-medium no-underline transition-colors hover:text-emerald-600"
+            :class="isActive('/fasilitas') ? 'text-emerald-600' : 'text-gray-600'">Fasilitas</a>
+        <a href="/berita" wire:navigate @click="mobileOpen = false"
+            class="py-2.5 text-sm font-medium no-underline transition-colors hover:text-emerald-600"
+            :class="isActive('/berita') ? 'text-emerald-600' : 'text-gray-600'">Berita</a>
         <a href="{{ route('tentang') }}" wire:navigate @click="mobileOpen = false"
-            class="{{ request()->routeIs('tentang') ? 'active' : '' }}">Tentang</a>
+            class="py-2.5 text-sm font-medium no-underline transition-colors hover:text-emerald-600"
+            :class="isActive('/tentang') ? 'text-emerald-600' : 'text-gray-600'">Tentang</a>
         <a href="{{ route('kontak') }}" wire:navigate @click="mobileOpen = false"
-            class="{{ request()->routeIs('kontak') ? 'active' : '' }}">Kontak</a>
+            class="py-2.5 text-sm font-medium no-underline transition-colors hover:text-emerald-600"
+            :class="isActive('/kontak') ? 'text-emerald-600' : 'text-gray-600'">Kontak</a>
         <a href="https://lws.syafaaturrasul.com" target="_blank" rel="noopener noreferrer" @click="mobileOpen = false"
-            style="color:#b8860b;font-weight:700;">Wakaf</a>
+            class="py-2.5 text-sm font-bold text-yellow-700 no-underline">Wakaf</a>
     </div>
 </nav>
