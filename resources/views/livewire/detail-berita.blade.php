@@ -5,7 +5,11 @@
     <!-- ════════════════════════════════════════════ -->
     <section class="relative overflow-hidden bg-gradient-to-br from-emerald-900 via-emerald-700 to-emerald-500 px-6 pb-10 pt-[120px] [&>*]:relative [&>*]:z-[1] before:absolute before:inset-0 before:bg-[radial-gradient(circle,rgba(255,255,255,0.08)_1px,transparent_1px)] before:bg-[size:24px_24px] before:opacity-50">
         <div class="mx-auto max-w-[800px] px-6">
-            <a href="{{ url()->previous() === url()->current() ? url('/berita') : url()->previous() }}"
+            @php
+                $backUrl = url()->previous() === url()->current() ? url('/berita') : url()->previous();
+                $backIsInternal = str_starts_with($backUrl, url('/'));
+            @endphp
+            <a href="{{ $backUrl }}" @if ($backIsInternal) wire:navigate @endif
                 class="mb-5 inline-flex items-center gap-1.5 text-sm text-white/80 no-underline transition-colors hover:text-white">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12" /><polyline points="12 19 5 12 12 5" /></svg>
                 Kembali

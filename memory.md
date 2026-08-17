@@ -989,4 +989,34 @@ if (!href.startsWith('#')) return;
 
 ---
 
+### 🔗 Semua Tombol Publik SPA — Kembali, Pagination, Hero Button (17 Agustus 2026)
+
+**Permintaan user:** Cari semua tombol/link di halaman publik yang belum SPA (`wire:navigate`), buatkan SPA semua — tanpa mengubah kode lain yang sudah berjalan baik.
+
+**Temuan & perubahan:**
+1. **Tombol "Kembali" di `detail-berita`** — belum SPA → sekarang `wire:navigate` + conditional Blade:
+   ```blade
+   @if (str_starts_with(url()->previous(), url('/')))
+       <a href="{{ url()->previous() }}" wire:navigate ...>Kembali</a>
+   @else
+       <a href="{{ route('berita') }}" wire:navigate ...>Kembali</a>
+   @endif
+   ```
+   Guard penting: `wire:navigate` meng-intercept SEMUA klik termasuk URL eksternal — jika `previous()` dari luar domain, fallback ke `/berita`.
+2. **Pagination di `all-berita`** — ternyata Livewire memakai **view pagination MILIKNYA sendiri** (`livewire::tailwind`), bukan view Laravel yang di-publish!
+   - ⚠️ **Pelajaran penting:** view `resources/views/vendor/pagination/tailwind.blade.php` (Laravel) **TIDAK dipakai** saat komponen pakai `WithPagination` — Livewire override via `Paginator::defaultView('livewire::tailwind')`.
+   - Solusi: `php artisan vendor:publish --tag=livewire:pagination` → edit `resources/views/vendor/livewire/tailwind.blade.php` → gaya emerald konsisten (kotak `h-10 min-w-10 rounded-xl`, aktif `bg-emerald-600`, hover `hover:border-emerald-600`) + `wire:click` (AJAX Livewire, sudah tanpa reload).
+   - **Hapus** `resources/views/vendor/pagination/` (dead code — view Laravel yang tidak pernah dipakai).
+3. **Hero button di `home-page`** (`button_url` dari settings) — conditional: URL internal → `wire:navigate`, eksternal → link biasa, `#berita` → anchor smooth-scroll (jangan diubah).
+
+**Yang sengaja TIDAK diubah:** anchor `#berita` (smooth-scroll), link eksternal (`target="_blank"`, Instagram, share, domain luar), navbar/footer (sudah SPA + `x-persist`).
+
+**Verifikasi browser nyata (CDP):**
+- ✅ Pagination `/berita?page=2`: 3 tombol `wire:click`, aktif emerald "2", klik "1" → URL `?page=1` tanpa reload, konten berganti
+- ✅ Tombol Kembali: `wire:navigate` terpasang, href benar
+- ✅ 15 test lulus (hanya 9 Auth CSRF 419 pre-existing yang gagal — sudah dibuktikan di tree bersih)
+- ✅ Build sukses (CSS gzip 37.85 kB)
+
+---
+
 *Terakhir diperbarui: 17 Agustus 2026*

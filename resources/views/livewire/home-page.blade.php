@@ -99,7 +99,11 @@
                         </p>
 
                         <div class="flex flex-wrap gap-4">
-                            <a href="{{ $hero->button_url ?? '#berita' }}"
+                            @php
+                                $heroBtnUrl = $hero->button_url ?? '#berita';
+                                $heroBtnIsInternal = !str_starts_with($heroBtnUrl, '#') && !str_starts_with($heroBtnUrl, 'http');
+                            @endphp
+                            <a href="{{ $heroBtnUrl }}" @if ($heroBtnIsInternal) wire:navigate @endif
                                 class="btn-hero-cta relative inline-flex cursor-pointer items-center gap-2.5 rounded-[14px] border-none bg-gradient-to-br from-emerald-600 to-green-500 px-9 py-4 text-[1.05rem] font-bold tracking-[0.3px] text-white no-underline shadow-[0_4px_20px_rgba(22,163,74,0.3)] transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] before:pointer-events-none before:absolute before:inset-0 before:rounded-[14px] before:bg-gradient-to-br before:from-white/15 before:to-transparent after:absolute after:-inset-1 after:z-[-1] after:rounded-[18px] after:bg-gradient-to-br after:from-emerald-600 after:via-green-500 after:to-green-400 after:opacity-0 after:blur-[12px] after:transition-opacity hover:-translate-y-[3px] hover:scale-[1.02] hover:bg-gradient-to-br hover:from-green-800 hover:to-emerald-600 hover:shadow-[0_12px_36px_rgba(22,163,74,0.45)] hover:after:opacity-60 active:scale-[0.98] active:translate-y-0 max-[480px]:px-5 max-[480px]:py-2.5 max-[480px]:text-[0.85rem]">
                                 {{ $hero->button_text ?? 'Lihat Berita' }}
                                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
